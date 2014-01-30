@@ -1921,7 +1921,7 @@ func yaml_parser_scan_directive_name(parser *yaml_parser_t,
 	var s []byte
 	for is_alpha(parser.buffer[parser.buffer_pos]) {
 		s = read(parser, s)
-		if cache(parser, 1) {
+		if !cache(parser, 1) {
 			return false
 		}
 	}
@@ -2299,11 +2299,7 @@ func yaml_parser_scan_tag_handle(parser *yaml_parser_t, directive bool,
 	}
 
 	if parser.buffer[parser.buffer_pos] != '!' {
-		msg := "while scanning a tag directive"
-		if !directive {
-			msg = "while scanning a tag"
-		}
-		yaml_parser_set_scanner_error(parser, msg,
+		yaml_parser_set_scanner_tag_error(parser, directive,
 			start_mark, "did not find expected '!'")
 		return false
 	}
@@ -2320,7 +2316,7 @@ func yaml_parser_scan_tag_handle(parser *yaml_parser_t, directive bool,
 
 	for is_alpha(parser.buffer[parser.buffer_pos]) {
 		s = read(parser, s)
-		if cache(parser, 1) {
+		if !cache(parser, 1) {
 			return false
 		}
 	}
@@ -2336,8 +2332,8 @@ func yaml_parser_scan_tag_handle(parser *yaml_parser_t, directive bool,
 		 * URI.
 		 */
 
-		if directive && !(s[0] == '!' && s[1] == 0) {
-			yaml_parser_set_scanner_error(parser, "while parsing a tag directive",
+		if directive && !(s[0] == '!' && len(s) == 1) {
+			yaml_parser_set_scanner_tag_error(parser, directive,
 				start_mark, "did not find expected '!'")
 			return false
 		}
@@ -2847,6 +2843,9 @@ func yaml_parser_scan_flow_scalar(parser *yaml_parser_t, token *yaml_token_t,
 				skip(parser)
 				skip(parser)
 			} else if single && parser.buffer[parser.buffer_pos] == '\'' {
+				/* Check for the right quote. */
+				break
+			} else if !single && parser.buffer[parser.buffer_pos] == '"' {
 				/* Check for the right quote. */
 				break
 			} else if !single && parser.buffer[parser.buffer_pos] == '\\' &&
