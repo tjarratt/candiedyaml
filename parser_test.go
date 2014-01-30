@@ -26,7 +26,7 @@ var parses = func(filename string) {
 				break
 			}
 
-			if token.token_type == YAML_STREAM_END_TOKEN {
+			if token.token_type == yaml_STREAM_END_TOKEN {
 				break
 			}
 		}
@@ -36,7 +36,7 @@ var parses = func(filename string) {
 		// msg := "SUCCESS"
 		// if failed {
 		// 	msg = "FAILED"
-		// 	if parser.error != YAML_NO_ERROR {
+		// 	if parser.error != yaml_NO_ERROR {
 		// 		m := parser.problem_mark
 		// 		fmt.Printf("ERROR: (%s) %s @ line: %d  col: %d\n",
 		// 			parser.context, parser.problem, m.line, m.column)

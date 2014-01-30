@@ -590,7 +590,7 @@ func yaml_parser_scan(parser *yaml_parser_t, token *yaml_token_t) bool {
 
 	/* No tokens after STREAM-END or error. */
 
-	if parser.stream_end_produced || parser.error != YAML_NO_ERROR {
+	if parser.stream_end_produced || parser.error != yaml_NO_ERROR {
 		return true
 	}
 
@@ -609,7 +609,7 @@ func yaml_parser_scan(parser *yaml_parser_t, token *yaml_token_t) bool {
 	parser.token_available = false
 	parser.tokens_parsed++
 
-	if token.token_type == YAML_STREAM_END_TOKEN {
+	if token.token_type == yaml_STREAM_END_TOKEN {
 		parser.stream_end_produced = true
 	}
 
@@ -622,7 +622,7 @@ func yaml_parser_scan(parser *yaml_parser_t, token *yaml_token_t) bool {
 
 func yaml_parser_set_scanner_error(parser *yaml_parser_t, context string,
 	context_mark yaml_mark_t, problem string) bool {
-	parser.error = YAML_SCANNER_ERROR
+	parser.error = yaml_SCANNER_ERROR
 	parser.context = context
 	parser.context_mark = context_mark
 	parser.problem = problem
@@ -762,7 +762,7 @@ func yaml_parser_fetch_next_token(parser *yaml_parser_t) bool {
 		buf[pos] == '-' && buf[pos+1] == '-' && buf[pos+2] == '-' &&
 		is_blankz_at(buf, pos+3) {
 		return yaml_parser_fetch_document_indicator(parser,
-			YAML_DOCUMENT_START_TOKEN)
+			yaml_DOCUMENT_START_TOKEN)
 	}
 
 	/* Is it the document end indicator? */
@@ -771,35 +771,35 @@ func yaml_parser_fetch_next_token(parser *yaml_parser_t) bool {
 		buf[pos] == '.' && buf[pos+1] == '.' && buf[pos+2] == '.' &&
 		is_blankz_at(buf, pos+3) {
 		return yaml_parser_fetch_document_indicator(parser,
-			YAML_DOCUMENT_END_TOKEN)
+			yaml_DOCUMENT_END_TOKEN)
 	}
 
 	/* Is it the flow sequence start indicator? */
 
 	if buf[pos] == '[' {
 		return yaml_parser_fetch_flow_collection_start(parser,
-			YAML_FLOW_SEQUENCE_START_TOKEN)
+			yaml_FLOW_SEQUENCE_START_TOKEN)
 	}
 
 	/* Is it the flow mapping start indicator? */
 
 	if buf[pos] == '{' {
 		return yaml_parser_fetch_flow_collection_start(parser,
-			YAML_FLOW_MAPPING_START_TOKEN)
+			yaml_FLOW_MAPPING_START_TOKEN)
 	}
 
 	/* Is it the flow sequence end indicator? */
 
 	if buf[pos] == ']' {
 		return yaml_parser_fetch_flow_collection_end(parser,
-			YAML_FLOW_SEQUENCE_END_TOKEN)
+			yaml_FLOW_SEQUENCE_END_TOKEN)
 	}
 
 	/* Is it the flow mapping end indicator? */
 
 	if buf[pos] == '}' {
 		return yaml_parser_fetch_flow_collection_end(parser,
-			YAML_FLOW_MAPPING_END_TOKEN)
+			yaml_FLOW_MAPPING_END_TOKEN)
 	}
 
 	/* Is it the flow entry indicator? */
@@ -827,13 +827,13 @@ func yaml_parser_fetch_next_token(parser *yaml_parser_t) bool {
 
 	/* Is it an alias? */
 	if buf[pos] == '*' {
-		return yaml_parser_fetch_anchor(parser, YAML_ALIAS_TOKEN)
+		return yaml_parser_fetch_anchor(parser, yaml_ALIAS_TOKEN)
 	}
 
 	/* Is it an anchor? */
 
 	if buf[pos] == '&' {
-		return yaml_parser_fetch_anchor(parser, YAML_ANCHOR_TOKEN)
+		return yaml_parser_fetch_anchor(parser, yaml_ANCHOR_TOKEN)
 	}
 
 	/* Is it a tag? */
@@ -1102,7 +1102,7 @@ func yaml_parser_unroll_indent(parser *yaml_parser_t, column int) bool {
 	for parser.indent > column {
 		/* Create a token and append it to the queue. */
 		token := yaml_token_t{
-			token_type: YAML_BLOCK_END_TOKEN,
+			token_type: yaml_BLOCK_END_TOKEN,
 			start_mark: parser.mark,
 			end_mark:   parser.mark,
 		}
@@ -1139,7 +1139,7 @@ func yaml_parser_fetch_stream_start(parser *yaml_parser_t) bool {
 
 	/* Create the STREAM-START token and append it to the queue. */
 	token := yaml_token_t{
-		token_type: YAML_STREAM_START_TOKEN,
+		token_type: yaml_STREAM_START_TOKEN,
 		start_mark: parser.mark,
 		end_mark:   parser.mark,
 		encoding:   parser.encoding,
@@ -1177,7 +1177,7 @@ func yaml_parser_fetch_stream_end(parser *yaml_parser_t) bool {
 
 	/* Create the STREAM-END token and append it to the queue. */
 	token := yaml_token_t{
-		token_type: YAML_STREAM_END_TOKEN,
+		token_type: yaml_STREAM_END_TOKEN,
 		start_mark: parser.mark,
 		end_mark:   parser.mark,
 	}
@@ -1377,7 +1377,7 @@ func yaml_parser_fetch_flow_entry(parser *yaml_parser_t) bool {
 	/* Create the FLOW-ENTRY token and append it to the queue. */
 
 	token := yaml_token_t{
-		token_type: YAML_FLOW_ENTRY_TOKEN,
+		token_type: yaml_FLOW_ENTRY_TOKEN,
 		start_mark: start_mark,
 		end_mark:   end_mark,
 	}
@@ -1406,7 +1406,7 @@ func yaml_parser_fetch_block_entry(parser *yaml_parser_t) bool {
 		/* Add the BLOCK-SEQUENCE-START token if needed. */
 
 		if !yaml_parser_roll_indent(parser, parser.mark.column, -1,
-			YAML_BLOCK_SEQUENCE_START_TOKEN, parser.mark) {
+			yaml_BLOCK_SEQUENCE_START_TOKEN, parser.mark) {
 			return false
 		}
 	} else {
@@ -1436,7 +1436,7 @@ func yaml_parser_fetch_block_entry(parser *yaml_parser_t) bool {
 	/* Create the BLOCK-ENTRY token and append it to the queue. */
 
 	token := yaml_token_t{
-		token_type: YAML_BLOCK_ENTRY_TOKEN,
+		token_type: yaml_BLOCK_ENTRY_TOKEN,
 		start_mark: start_mark,
 		end_mark:   end_mark,
 	}
@@ -1464,7 +1464,7 @@ func yaml_parser_fetch_key(parser *yaml_parser_t) bool {
 		/* Add the BLOCK-MAPPING-START token if needed. */
 
 		if !yaml_parser_roll_indent(parser, parser.mark.column, -1,
-			YAML_BLOCK_MAPPING_START_TOKEN, parser.mark) {
+			yaml_BLOCK_MAPPING_START_TOKEN, parser.mark) {
 			return false
 		}
 	}
@@ -1488,7 +1488,7 @@ func yaml_parser_fetch_key(parser *yaml_parser_t) bool {
 	/* Create the KEY token and append it to the queue. */
 
 	token := yaml_token_t{
-		token_type: YAML_KEY_TOKEN,
+		token_type: yaml_KEY_TOKEN,
 		start_mark: start_mark,
 		end_mark:   end_mark,
 	}
@@ -1512,7 +1512,7 @@ func yaml_parser_fetch_value(parser *yaml_parser_t) bool {
 		/* Create the KEY token and insert it into the queue. */
 
 		token := yaml_token_t{
-			token_type: YAML_KEY_TOKEN,
+			token_type: yaml_KEY_TOKEN,
 			start_mark: simple_key.mark,
 			end_mark:   simple_key.mark,
 		}
@@ -1523,7 +1523,7 @@ func yaml_parser_fetch_value(parser *yaml_parser_t) bool {
 
 		if !yaml_parser_roll_indent(parser, simple_key.mark.column,
 			simple_key.token_number,
-			YAML_BLOCK_MAPPING_START_TOKEN, simple_key.mark) {
+			yaml_BLOCK_MAPPING_START_TOKEN, simple_key.mark) {
 			return false
 		}
 
@@ -1550,7 +1550,7 @@ func yaml_parser_fetch_value(parser *yaml_parser_t) bool {
 			/* Add the BLOCK-MAPPING-START token if needed. */
 
 			if !yaml_parser_roll_indent(parser, parser.mark.column, -1,
-				YAML_BLOCK_MAPPING_START_TOKEN, parser.mark) {
+				yaml_BLOCK_MAPPING_START_TOKEN, parser.mark) {
 				return false
 			}
 		}
@@ -1569,7 +1569,7 @@ func yaml_parser_fetch_value(parser *yaml_parser_t) bool {
 	/* Create the VALUE token and append it to the queue. */
 
 	token := yaml_token_t{
-		token_type: YAML_VALUE_TOKEN,
+		token_type: yaml_VALUE_TOKEN,
 		start_mark: start_mark,
 		end_mark:   end_mark,
 	}
@@ -1824,7 +1824,7 @@ func yaml_parser_scan_directive(parser *yaml_parser_t, token *yaml_token_t) bool
 		/* Create a VERSION-DIRECTIVE token. */
 
 		*token = yaml_token_t{
-			token_type: YAML_VERSION_DIRECTIVE_TOKEN,
+			token_type: yaml_VERSION_DIRECTIVE_TOKEN,
 			start_mark: start_mark,
 			end_mark:   end_mark,
 			major:      major,
@@ -1844,7 +1844,7 @@ func yaml_parser_scan_directive(parser *yaml_parser_t, token *yaml_token_t) bool
 		/* Create a TAG-DIRECTIVE token. */
 
 		*token = yaml_token_t{
-			token_type: YAML_TAG_DIRECTIVE_TOKEN,
+			token_type: yaml_TAG_DIRECTIVE_TOKEN,
 			start_mark: start_mark,
 			end_mark:   end_mark,
 			value:      handle,
@@ -2161,7 +2161,7 @@ func yaml_parser_scan_anchor(parser *yaml_parser_t, token *yaml_token_t,
 		b == '%' || b == '@' ||
 		b == '`') {
 		context := "while scanning an anchor"
-		if token_type != YAML_ANCHOR_TOKEN {
+		if token_type != yaml_ANCHOR_TOKEN {
 			context = "while scanning an alias"
 		}
 		yaml_parser_set_scanner_error(parser, context, start_mark,
@@ -2275,7 +2275,7 @@ func yaml_parser_scan_tag(parser *yaml_parser_t, token *yaml_token_t) bool {
 	/* Create a token. */
 
 	*token = yaml_token_t{
-		token_type: YAML_TAG_TOKEN,
+		token_type: yaml_TAG_TOKEN,
 		start_mark: start_mark,
 		end_mark:   end_mark,
 		value:      handle,
@@ -2692,14 +2692,14 @@ func yaml_parser_scan_block_scalar(parser *yaml_parser_t, token *yaml_token_t,
 	/* Create a token. */
 
 	*token = yaml_token_t{
-		token_type: YAML_SCALAR_TOKEN,
+		token_type: yaml_SCALAR_TOKEN,
 		start_mark: start_mark,
 		end_mark:   end_mark,
 		value:      s,
-		style:      YAML_LITERAL_SCALAR_STYLE,
+		style:      yaml_LITERAL_SCALAR_STYLE,
 	}
 	if !literal {
-		token.style = YAML_FOLDED_SCALAR_STYLE
+		token.style = yaml_FOLDED_SCALAR_STYLE
 	}
 
 	return true
@@ -3064,14 +3064,14 @@ func yaml_parser_scan_flow_scalar(parser *yaml_parser_t, token *yaml_token_t,
 	/* Create a token. */
 
 	*token = yaml_token_t{
-		token_type: YAML_SCALAR_TOKEN,
+		token_type: yaml_SCALAR_TOKEN,
 		start_mark: start_mark,
 		end_mark:   end_mark,
 		value:      s,
-		style:      YAML_SINGLE_QUOTED_SCALAR_STYLE,
+		style:      yaml_SINGLE_QUOTED_SCALAR_STYLE,
 	}
 	if !single {
-		token.style = YAML_DOUBLE_QUOTED_SCALAR_STYLE
+		token.style = yaml_DOUBLE_QUOTED_SCALAR_STYLE
 	}
 
 	return true
@@ -3243,11 +3243,11 @@ func yaml_parser_scan_plain_scalar(parser *yaml_parser_t, token *yaml_token_t) b
 	/* Create a token. */
 
 	*token = yaml_token_t{
-		token_type: YAML_SCALAR_TOKEN,
+		token_type: yaml_SCALAR_TOKEN,
 		start_mark: start_mark,
 		end_mark:   end_mark,
 		value:      s,
-		style:      YAML_PLAIN_SCALAR_STYLE,
+		style:      yaml_PLAIN_SCALAR_STYLE,
 	}
 
 	/* Note that we change the 'simple_key_allowed' flag. */

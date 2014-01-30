@@ -60,7 +60,7 @@ func peek_token(parser *yaml_parser_t) *yaml_token_t {
 func skip_token(parser *yaml_parser_t) {
 	parser.token_available = false
 	parser.tokens_parsed++
-	parser.stream_end_produced = parser.tokens[parser.tokens_head].token_type == YAML_STREAM_END_TOKEN
+	parser.stream_end_produced = parser.tokens[parser.tokens_head].token_type == yaml_STREAM_END_TOKEN
 	parser.tokens_head++
 }
 
@@ -74,8 +74,8 @@ func yaml_parser_parse(parser *yaml_parser_t, event *yaml_event_t) bool {
 
 	/* No events after the end of the stream or error. */
 
-	if parser.stream_end_produced || parser.error != YAML_NO_ERROR ||
-		parser.state == YAML_PARSE_END_STATE {
+	if parser.stream_end_produced || parser.error != yaml_NO_ERROR ||
+		parser.state == yaml_PARSE_END_STATE {
 		return true
 	}
 
@@ -90,7 +90,7 @@ func yaml_parser_parse(parser *yaml_parser_t, event *yaml_event_t) bool {
 
 func yaml_parser_set_parser_error(parser *yaml_parser_t,
 	problem string, problem_mark yaml_mark_t) bool {
-	parser.error = YAML_PARSER_ERROR
+	parser.error = yaml_PARSER_ERROR
 	parser.problem = problem
 	parser.problem_mark = problem_mark
 
@@ -100,7 +100,7 @@ func yaml_parser_set_parser_error(parser *yaml_parser_t,
 func yaml_parser_set_parser_error_context(parser *yaml_parser_t,
 	context string, context_mark yaml_mark_t,
 	problem string, problem_mark yaml_mark_t) bool {
-	parser.error = YAML_PARSER_ERROR
+	parser.error = yaml_PARSER_ERROR
 	parser.context = context
 	parser.context_mark = context_mark
 	parser.problem = problem
@@ -115,73 +115,73 @@ func yaml_parser_set_parser_error_context(parser *yaml_parser_t,
 
 func yaml_parser_state_machine(parser *yaml_parser_t, event *yaml_event_t) bool {
 	switch parser.state {
-	case YAML_PARSE_STREAM_START_STATE:
+	case yaml_PARSE_STREAM_START_STATE:
 		return yaml_parser_parse_stream_start(parser, event)
 
-	case YAML_PARSE_IMPLICIT_DOCUMENT_START_STATE:
+	case yaml_PARSE_IMPLICIT_DOCUMENT_START_STATE:
 		return yaml_parser_parse_document_start(parser, event, true)
 
-	case YAML_PARSE_DOCUMENT_START_STATE:
+	case yaml_PARSE_DOCUMENT_START_STATE:
 		return yaml_parser_parse_document_start(parser, event, false)
 
-	case YAML_PARSE_DOCUMENT_CONTENT_STATE:
+	case yaml_PARSE_DOCUMENT_CONTENT_STATE:
 		return yaml_parser_parse_document_content(parser, event)
 
-	case YAML_PARSE_DOCUMENT_END_STATE:
+	case yaml_PARSE_DOCUMENT_END_STATE:
 		return yaml_parser_parse_document_end(parser, event)
 
-	case YAML_PARSE_BLOCK_NODE_STATE:
+	case yaml_PARSE_BLOCK_NODE_STATE:
 		return yaml_parser_parse_node(parser, event, true, false)
 
-	case YAML_PARSE_BLOCK_NODE_OR_INDENTLESS_SEQUENCE_STATE:
+	case yaml_PARSE_BLOCK_NODE_OR_INDENTLESS_SEQUENCE_STATE:
 		return yaml_parser_parse_node(parser, event, true, true)
 
-	case YAML_PARSE_FLOW_NODE_STATE:
+	case yaml_PARSE_FLOW_NODE_STATE:
 		return yaml_parser_parse_node(parser, event, false, false)
 
-	case YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE:
+	case yaml_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE:
 		return yaml_parser_parse_block_sequence_entry(parser, event, true)
 
-	case YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE:
+	case yaml_PARSE_BLOCK_SEQUENCE_ENTRY_STATE:
 		return yaml_parser_parse_block_sequence_entry(parser, event, false)
 
-	case YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE:
+	case yaml_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE:
 		return yaml_parser_parse_indentless_sequence_entry(parser, event)
 
-	case YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE:
+	case yaml_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE:
 		return yaml_parser_parse_block_mapping_key(parser, event, true)
 
-	case YAML_PARSE_BLOCK_MAPPING_KEY_STATE:
+	case yaml_PARSE_BLOCK_MAPPING_KEY_STATE:
 		return yaml_parser_parse_block_mapping_key(parser, event, false)
 
-	case YAML_PARSE_BLOCK_MAPPING_VALUE_STATE:
+	case yaml_PARSE_BLOCK_MAPPING_VALUE_STATE:
 		return yaml_parser_parse_block_mapping_value(parser, event)
 
-	case YAML_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE:
+	case yaml_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE:
 		return yaml_parser_parse_flow_sequence_entry(parser, event, true)
 
-	case YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE:
+	case yaml_PARSE_FLOW_SEQUENCE_ENTRY_STATE:
 		return yaml_parser_parse_flow_sequence_entry(parser, event, false)
 
-	case YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_KEY_STATE:
+	case yaml_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_KEY_STATE:
 		return yaml_parser_parse_flow_sequence_entry_mapping_key(parser, event)
 
-	case YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE:
+	case yaml_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE:
 		return yaml_parser_parse_flow_sequence_entry_mapping_value(parser, event)
 
-	case YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE:
+	case yaml_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE:
 		return yaml_parser_parse_flow_sequence_entry_mapping_end(parser, event)
 
-	case YAML_PARSE_FLOW_MAPPING_FIRST_KEY_STATE:
+	case yaml_PARSE_FLOW_MAPPING_FIRST_KEY_STATE:
 		return yaml_parser_parse_flow_mapping_key(parser, event, true)
 
-	case YAML_PARSE_FLOW_MAPPING_KEY_STATE:
+	case yaml_PARSE_FLOW_MAPPING_KEY_STATE:
 		return yaml_parser_parse_flow_mapping_key(parser, event, false)
 
-	case YAML_PARSE_FLOW_MAPPING_VALUE_STATE:
+	case yaml_PARSE_FLOW_MAPPING_VALUE_STATE:
 		return yaml_parser_parse_flow_mapping_value(parser, event, false)
 
-	case YAML_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE:
+	case yaml_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE:
 		return yaml_parser_parse_flow_mapping_value(parser, event, true)
 	}
 
@@ -200,14 +200,14 @@ func yaml_parser_parse_stream_start(parser *yaml_parser_t, event *yaml_event_t) 
 		return false
 	}
 
-	if token.token_type != YAML_STREAM_START_TOKEN {
+	if token.token_type != yaml_STREAM_START_TOKEN {
 		return yaml_parser_set_parser_error(parser,
 			"did not find expected <stream-start>", token.start_mark)
 	}
 
-	parser.state = YAML_PARSE_IMPLICIT_DOCUMENT_START_STATE
+	parser.state = yaml_PARSE_IMPLICIT_DOCUMENT_START_STATE
 	*event = yaml_event_t{
-		event_type: YAML_STREAM_START_EVENT,
+		event_type: yaml_STREAM_START_EVENT,
 		start_mark: token.start_mark,
 		end_mark:   token.end_mark,
 		encoding:   token.encoding,
@@ -236,7 +236,7 @@ func yaml_parser_parse_document_start(parser *yaml_parser_t, event *yaml_event_t
 	/* Parse extra document end indicators. */
 
 	if !implicit {
-		for token.token_type == YAML_DOCUMENT_END_TOKEN {
+		for token.token_type == yaml_DOCUMENT_END_TOKEN {
 			skip_token(parser)
 			token = peek_token(parser)
 			if token == nil {
@@ -247,24 +247,24 @@ func yaml_parser_parse_document_start(parser *yaml_parser_t, event *yaml_event_t
 
 	/* Parse an implicit document. */
 
-	if implicit && token.token_type != YAML_VERSION_DIRECTIVE_TOKEN &&
-		token.token_type != YAML_TAG_DIRECTIVE_TOKEN &&
-		token.token_type != YAML_DOCUMENT_START_TOKEN &&
-		token.token_type != YAML_STREAM_END_TOKEN {
+	if implicit && token.token_type != yaml_VERSION_DIRECTIVE_TOKEN &&
+		token.token_type != yaml_TAG_DIRECTIVE_TOKEN &&
+		token.token_type != yaml_DOCUMENT_START_TOKEN &&
+		token.token_type != yaml_STREAM_END_TOKEN {
 		if !yaml_parser_process_directives(parser, nil, nil) {
 			return false
 		}
 
-		parser.states = append(parser.states, YAML_PARSE_DOCUMENT_END_STATE)
-		parser.state = YAML_PARSE_BLOCK_NODE_STATE
+		parser.states = append(parser.states, yaml_PARSE_DOCUMENT_END_STATE)
+		parser.state = yaml_PARSE_BLOCK_NODE_STATE
 
 		*event = yaml_event_t{
-			event_type: YAML_DOCUMENT_START_EVENT,
+			event_type: yaml_DOCUMENT_START_EVENT,
 			implicit:   true,
 			start_mark: token.start_mark,
 			end_mark:   token.end_mark,
 		}
-	} else if token.token_type != YAML_STREAM_END_TOKEN {
+	} else if token.token_type != yaml_STREAM_END_TOKEN {
 		/* Parse an explicit document. */
 		var version_directive *yaml_version_directive_t
 		var tag_directives []yaml_tag_directive_t
@@ -278,19 +278,19 @@ func yaml_parser_parse_document_start(parser *yaml_parser_t, event *yaml_event_t
 		if token == nil {
 			return false
 		}
-		if token.token_type != YAML_DOCUMENT_START_TOKEN {
+		if token.token_type != yaml_DOCUMENT_START_TOKEN {
 			yaml_parser_set_parser_error(parser,
 				"did not find expected <document start>", token.start_mark)
 			return false
 		}
 
-		parser.states = append(parser.states, YAML_PARSE_DOCUMENT_END_STATE)
-		parser.state = YAML_PARSE_DOCUMENT_CONTENT_STATE
+		parser.states = append(parser.states, yaml_PARSE_DOCUMENT_END_STATE)
+		parser.state = yaml_PARSE_DOCUMENT_CONTENT_STATE
 
 		end_mark := token.end_mark
 
 		*event = yaml_event_t{
-			event_type:        YAML_DOCUMENT_START_EVENT,
+			event_type:        yaml_DOCUMENT_START_EVENT,
 			start_mark:        start_mark,
 			end_mark:          end_mark,
 			version_directive: version_directive,
@@ -300,10 +300,10 @@ func yaml_parser_parse_document_start(parser *yaml_parser_t, event *yaml_event_t
 		skip_token(parser)
 	} else {
 		/* Parse the stream end. */
-		parser.state = YAML_PARSE_END_STATE
+		parser.state = yaml_PARSE_END_STATE
 
 		*event = yaml_event_t{
-			event_type: YAML_STREAM_END_EVENT,
+			event_type: yaml_STREAM_END_EVENT,
 			start_mark: token.start_mark,
 			end_mark:   token.end_mark,
 		}
@@ -324,11 +324,11 @@ func yaml_parser_parse_document_content(parser *yaml_parser_t, event *yaml_event
 		return false
 	}
 
-	if token.token_type == YAML_VERSION_DIRECTIVE_TOKEN ||
-		token.token_type == YAML_TAG_DIRECTIVE_TOKEN ||
-		token.token_type == YAML_DOCUMENT_START_TOKEN ||
-		token.token_type == YAML_DOCUMENT_END_TOKEN ||
-		token.token_type == YAML_STREAM_END_TOKEN {
+	if token.token_type == yaml_VERSION_DIRECTIVE_TOKEN ||
+		token.token_type == yaml_TAG_DIRECTIVE_TOKEN ||
+		token.token_type == yaml_DOCUMENT_START_TOKEN ||
+		token.token_type == yaml_DOCUMENT_END_TOKEN ||
+		token.token_type == yaml_STREAM_END_TOKEN {
 		parser.state = parser.states[len(parser.states)-1]
 		parser.states = parser.states[:len(parser.states)-1]
 		return yaml_parser_process_empty_scalar(parser, event,
@@ -356,7 +356,7 @@ func yaml_parser_parse_document_end(parser *yaml_parser_t, event *yaml_event_t) 
 
 	start_mark, end_mark := token.start_mark, token.start_mark
 
-	if token.token_type == YAML_DOCUMENT_END_TOKEN {
+	if token.token_type == yaml_DOCUMENT_END_TOKEN {
 		end_mark = token.end_mark
 		skip_token(parser)
 		implicit = false
@@ -364,9 +364,9 @@ func yaml_parser_parse_document_end(parser *yaml_parser_t, event *yaml_event_t) 
 
 	parser.tag_directives = parser.tag_directives[:0]
 
-	parser.state = YAML_PARSE_DOCUMENT_START_STATE
+	parser.state = yaml_PARSE_DOCUMENT_START_STATE
 	*event = yaml_event_t{
-		event_type: YAML_DOCUMENT_END_EVENT,
+		event_type: yaml_DOCUMENT_END_EVENT,
 		start_mark: start_mark,
 		end_mark:   end_mark,
 		implicit:   implicit,
@@ -412,12 +412,12 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 		return false
 	}
 
-	if token.token_type == YAML_ALIAS_TOKEN {
+	if token.token_type == yaml_ALIAS_TOKEN {
 		parser.state = parser.states[len(parser.states)-1]
 		parser.states = parser.states[:len(parser.states)-1]
 
 		*event = yaml_event_t{
-			event_type: YAML_ALIAS_EVENT,
+			event_type: yaml_ALIAS_EVENT,
 			start_mark: token.start_mark,
 			end_mark:   token.end_mark,
 			anchor:     token.value,
@@ -430,7 +430,7 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 		var tag_handle *[]byte
 		var tag_suffix, anchor []byte
 		var tag_mark yaml_mark_t
-		if token.token_type == YAML_ANCHOR_TOKEN {
+		if token.token_type == yaml_ANCHOR_TOKEN {
 			anchor = token.value
 			start_mark = token.start_mark
 			end_mark = token.end_mark
@@ -439,7 +439,7 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 			if token == nil {
 				return false
 			}
-			if token.token_type == YAML_TAG_TOKEN {
+			if token.token_type == yaml_TAG_TOKEN {
 				*tag_handle = token.value
 				tag_suffix = token.suffix
 				tag_mark = token.start_mark
@@ -450,7 +450,7 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 					return false
 				}
 			}
-		} else if token.token_type == YAML_TAG_TOKEN {
+		} else if token.token_type == yaml_TAG_TOKEN {
 			*tag_handle = token.value
 			tag_suffix = token.suffix
 			start_mark, tag_mark = token.start_mark, token.start_mark
@@ -460,7 +460,7 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 			if token == nil {
 				return false
 			}
-			if token.token_type == YAML_ANCHOR_TOKEN {
+			if token.token_type == yaml_ANCHOR_TOKEN {
 				anchor = token.value
 				end_mark = token.end_mark
 				skip_token(parser)
@@ -499,27 +499,27 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 		}
 
 		implicit := len(tag) == 0
-		if indentless_sequence && token.token_type == YAML_BLOCK_ENTRY_TOKEN {
+		if indentless_sequence && token.token_type == yaml_BLOCK_ENTRY_TOKEN {
 			end_mark = token.end_mark
-			parser.state = YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE
+			parser.state = yaml_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE
 
 			*event = yaml_event_t{
-				event_type: YAML_SEQUENCE_START_EVENT,
+				event_type: yaml_SEQUENCE_START_EVENT,
 				start_mark: start_mark,
 				end_mark:   end_mark,
 				anchor:     anchor,
 				tag:        tag,
 				implicit:   implicit,
-				style:      yaml_style_t(YAML_BLOCK_SEQUENCE_STYLE),
+				style:      yaml_style_t(yaml_BLOCK_SEQUENCE_STYLE),
 			}
 
 			return true
 		} else {
-			if token.token_type == YAML_SCALAR_TOKEN {
+			if token.token_type == yaml_SCALAR_TOKEN {
 				plain_implicit := false
 				quoted_implicit := false
 				end_mark = token.end_mark
-				if (token.style == YAML_PLAIN_SCALAR_STYLE && len(tag) == 0) ||
+				if (token.style == yaml_PLAIN_SCALAR_STYLE && len(tag) == 0) ||
 					(len(tag) == 1 && tag[0] == '!') {
 					plain_implicit = true
 				} else if len(tag) == 0 {
@@ -530,7 +530,7 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 				parser.states = parser.states[:len(parser.states)-1]
 
 				*event = yaml_event_t{
-					event_type:      YAML_SCALAR_EVENT,
+					event_type:      yaml_SCALAR_EVENT,
 					start_mark:      start_mark,
 					end_mark:        end_mark,
 					anchor:          anchor,
@@ -543,63 +543,63 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 
 				skip_token(parser)
 				return true
-			} else if token.token_type == YAML_FLOW_SEQUENCE_START_TOKEN {
+			} else if token.token_type == yaml_FLOW_SEQUENCE_START_TOKEN {
 				end_mark = token.end_mark
-				parser.state = YAML_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE
+				parser.state = yaml_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE
 
 				*event = yaml_event_t{
-					event_type: YAML_SEQUENCE_START_EVENT,
+					event_type: yaml_SEQUENCE_START_EVENT,
 					start_mark: start_mark,
 					end_mark:   end_mark,
 					anchor:     anchor,
 					tag:        tag,
 					implicit:   implicit,
-					style:      yaml_style_t(YAML_FLOW_SEQUENCE_STYLE),
+					style:      yaml_style_t(yaml_FLOW_SEQUENCE_STYLE),
 				}
 
 				return true
-			} else if token.token_type == YAML_FLOW_MAPPING_START_TOKEN {
+			} else if token.token_type == yaml_FLOW_MAPPING_START_TOKEN {
 				end_mark = token.end_mark
-				parser.state = YAML_PARSE_FLOW_MAPPING_FIRST_KEY_STATE
+				parser.state = yaml_PARSE_FLOW_MAPPING_FIRST_KEY_STATE
 
 				*event = yaml_event_t{
-					event_type: YAML_MAPPING_START_EVENT,
+					event_type: yaml_MAPPING_START_EVENT,
 					start_mark: start_mark,
 					end_mark:   end_mark,
 					anchor:     anchor,
 					tag:        tag,
 					implicit:   implicit,
-					style:      yaml_style_t(YAML_FLOW_MAPPING_STYLE),
+					style:      yaml_style_t(yaml_FLOW_MAPPING_STYLE),
 				}
 
 				return true
-			} else if block && token.token_type == YAML_BLOCK_SEQUENCE_START_TOKEN {
+			} else if block && token.token_type == yaml_BLOCK_SEQUENCE_START_TOKEN {
 				end_mark = token.end_mark
-				parser.state = YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE
+				parser.state = yaml_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE
 
 				*event = yaml_event_t{
-					event_type: YAML_SEQUENCE_START_EVENT,
+					event_type: yaml_SEQUENCE_START_EVENT,
 					start_mark: start_mark,
 					end_mark:   end_mark,
 					anchor:     anchor,
 					tag:        tag,
 					implicit:   implicit,
-					style:      yaml_style_t(YAML_BLOCK_SEQUENCE_STYLE),
+					style:      yaml_style_t(yaml_BLOCK_SEQUENCE_STYLE),
 				}
 
 				return true
-			} else if block && token.token_type == YAML_BLOCK_MAPPING_START_TOKEN {
+			} else if block && token.token_type == yaml_BLOCK_MAPPING_START_TOKEN {
 				end_mark = token.end_mark
-				parser.state = YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE
+				parser.state = yaml_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE
 
 				*event = yaml_event_t{
-					event_type: YAML_MAPPING_START_EVENT,
+					event_type: yaml_MAPPING_START_EVENT,
 					start_mark: start_mark,
 					end_mark:   end_mark,
 					anchor:     anchor,
 					tag:        tag,
 					implicit:   implicit,
-					style:      yaml_style_t(YAML_BLOCK_MAPPING_STYLE),
+					style:      yaml_style_t(yaml_BLOCK_MAPPING_STYLE),
 				}
 				return true
 			} else if len(anchor) > 0 || len(tag) > 0 {
@@ -608,14 +608,14 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 				parser.states = parser.states[:len(parser.states)-1]
 
 				*event = yaml_event_t{
-					event_type:      YAML_SCALAR_EVENT,
+					event_type:      yaml_SCALAR_EVENT,
 					start_mark:      start_mark,
 					end_mark:        end_mark,
 					anchor:          anchor,
 					tag:             tag,
 					implicit:        implicit,
 					quoted_implicit: false,
-					style:           yaml_style_t(YAML_PLAIN_SCALAR_STYLE),
+					style:           yaml_style_t(yaml_PLAIN_SCALAR_STYLE),
 				}
 				return true
 			} else {
@@ -652,28 +652,28 @@ func yaml_parser_parse_block_sequence_entry(parser *yaml_parser_t,
 		return false
 	}
 
-	if token.token_type == YAML_BLOCK_ENTRY_TOKEN {
+	if token.token_type == yaml_BLOCK_ENTRY_TOKEN {
 		mark := token.end_mark
 		skip_token(parser)
 		token = peek_token(parser)
 		if token == nil {
 			return false
 		}
-		if token.token_type != YAML_BLOCK_ENTRY_TOKEN &&
-			token.token_type != YAML_BLOCK_END_TOKEN {
-			parser.states = append(parser.states, YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE)
+		if token.token_type != yaml_BLOCK_ENTRY_TOKEN &&
+			token.token_type != yaml_BLOCK_END_TOKEN {
+			parser.states = append(parser.states, yaml_PARSE_BLOCK_SEQUENCE_ENTRY_STATE)
 			return yaml_parser_parse_node(parser, event, true, false)
 		} else {
-			parser.state = YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE
+			parser.state = yaml_PARSE_BLOCK_SEQUENCE_ENTRY_STATE
 			return yaml_parser_process_empty_scalar(parser, event, mark)
 		}
-	} else if token.token_type == YAML_BLOCK_END_TOKEN {
+	} else if token.token_type == yaml_BLOCK_END_TOKEN {
 		parser.state = parser.states[len(parser.states)-1]
 		parser.states = parser.states[:len(parser.states)-1]
 		parser.marks = parser.marks[:len(parser.marks)-1]
 
 		*event = yaml_event_t{
-			event_type: YAML_SEQUENCE_END_EVENT,
+			event_type: yaml_SEQUENCE_END_EVENT,
 			start_mark: token.start_mark,
 			end_mark:   token.end_mark,
 		}
@@ -703,21 +703,21 @@ func yaml_parser_parse_indentless_sequence_entry(parser *yaml_parser_t,
 		return false
 	}
 
-	if token.token_type == YAML_BLOCK_ENTRY_TOKEN {
+	if token.token_type == yaml_BLOCK_ENTRY_TOKEN {
 		mark := token.end_mark
 		skip_token(parser)
 		token = peek_token(parser)
 		if token == nil {
 			return false
 		}
-		if token.token_type != YAML_BLOCK_ENTRY_TOKEN &&
-			token.token_type != YAML_KEY_TOKEN &&
-			token.token_type != YAML_VALUE_TOKEN &&
-			token.token_type != YAML_BLOCK_END_TOKEN {
-			parser.states = append(parser.states, YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE)
+		if token.token_type != yaml_BLOCK_ENTRY_TOKEN &&
+			token.token_type != yaml_KEY_TOKEN &&
+			token.token_type != yaml_VALUE_TOKEN &&
+			token.token_type != yaml_BLOCK_END_TOKEN {
+			parser.states = append(parser.states, yaml_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE)
 			return yaml_parser_parse_node(parser, event, true, false)
 		} else {
-			parser.state = YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE
+			parser.state = yaml_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE
 			return yaml_parser_process_empty_scalar(parser, event, mark)
 		}
 	} else {
@@ -725,7 +725,7 @@ func yaml_parser_parse_indentless_sequence_entry(parser *yaml_parser_t,
 		parser.states = parser.states[:len(parser.states)-1]
 
 		*event = yaml_event_t{
-			event_type: YAML_SEQUENCE_END_EVENT,
+			event_type: yaml_SEQUENCE_END_EVENT,
 			start_mark: token.start_mark,
 			end_mark:   token.start_mark,
 		}
@@ -758,28 +758,28 @@ func yaml_parser_parse_block_mapping_key(parser *yaml_parser_t,
 		return false
 	}
 
-	if token.token_type == YAML_KEY_TOKEN {
+	if token.token_type == yaml_KEY_TOKEN {
 		mark := token.end_mark
 		skip_token(parser)
 		token = peek_token(parser)
 		if token == nil {
 			return false
 		}
-		if token.token_type != YAML_KEY_TOKEN &&
-			token.token_type != YAML_VALUE_TOKEN &&
-			token.token_type != YAML_BLOCK_END_TOKEN {
-			parser.states = append(parser.states, YAML_PARSE_BLOCK_MAPPING_VALUE_STATE)
+		if token.token_type != yaml_KEY_TOKEN &&
+			token.token_type != yaml_VALUE_TOKEN &&
+			token.token_type != yaml_BLOCK_END_TOKEN {
+			parser.states = append(parser.states, yaml_PARSE_BLOCK_MAPPING_VALUE_STATE)
 			return yaml_parser_parse_node(parser, event, true, true)
 		} else {
-			parser.state = YAML_PARSE_BLOCK_MAPPING_VALUE_STATE
+			parser.state = yaml_PARSE_BLOCK_MAPPING_VALUE_STATE
 			return yaml_parser_process_empty_scalar(parser, event, mark)
 		}
-	} else if token.token_type == YAML_BLOCK_END_TOKEN {
+	} else if token.token_type == yaml_BLOCK_END_TOKEN {
 		parser.state = parser.states[len(parser.states)-1]
 		parser.states = parser.states[:len(parser.states)-1]
 		parser.marks = parser.marks[:len(parser.marks)-1]
 		*event = yaml_event_t{
-			event_type: YAML_MAPPING_END_EVENT,
+			event_type: yaml_MAPPING_END_EVENT,
 			start_mark: token.start_mark,
 			end_mark:   token.end_mark,
 		}
@@ -814,24 +814,24 @@ func yaml_parser_parse_block_mapping_value(parser *yaml_parser_t,
 		return false
 	}
 
-	if token.token_type == YAML_VALUE_TOKEN {
+	if token.token_type == yaml_VALUE_TOKEN {
 		mark := token.end_mark
 		skip_token(parser)
 		token = peek_token(parser)
 		if token == nil {
 			return false
 		}
-		if token.token_type != YAML_KEY_TOKEN &&
-			token.token_type != YAML_VALUE_TOKEN &&
-			token.token_type != YAML_BLOCK_END_TOKEN {
-			parser.states = append(parser.states, YAML_PARSE_BLOCK_MAPPING_KEY_STATE)
+		if token.token_type != yaml_KEY_TOKEN &&
+			token.token_type != yaml_VALUE_TOKEN &&
+			token.token_type != yaml_BLOCK_END_TOKEN {
+			parser.states = append(parser.states, yaml_PARSE_BLOCK_MAPPING_KEY_STATE)
 			return yaml_parser_parse_node(parser, event, true, true)
 		} else {
-			parser.state = YAML_PARSE_BLOCK_MAPPING_KEY_STATE
+			parser.state = yaml_PARSE_BLOCK_MAPPING_KEY_STATE
 			return yaml_parser_process_empty_scalar(parser, event, mark)
 		}
 	} else {
-		parser.state = YAML_PARSE_BLOCK_MAPPING_KEY_STATE
+		parser.state = yaml_PARSE_BLOCK_MAPPING_KEY_STATE
 		return yaml_parser_process_empty_scalar(parser, event, token.start_mark)
 	}
 }
@@ -863,9 +863,9 @@ func yaml_parser_parse_flow_sequence_entry(parser *yaml_parser_t,
 		return false
 	}
 
-	if token.token_type != YAML_FLOW_SEQUENCE_END_TOKEN {
+	if token.token_type != yaml_FLOW_SEQUENCE_END_TOKEN {
 		if !first {
-			if token.token_type == YAML_FLOW_ENTRY_TOKEN {
+			if token.token_type == yaml_FLOW_ENTRY_TOKEN {
 				skip_token(parser)
 				token = peek_token(parser)
 				if token == nil {
@@ -881,20 +881,20 @@ func yaml_parser_parse_flow_sequence_entry(parser *yaml_parser_t,
 			}
 		}
 
-		if token.token_type == YAML_KEY_TOKEN {
-			parser.state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_KEY_STATE
+		if token.token_type == yaml_KEY_TOKEN {
+			parser.state = yaml_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_KEY_STATE
 			*event = yaml_event_t{
-				event_type: YAML_MAPPING_START_EVENT,
+				event_type: yaml_MAPPING_START_EVENT,
 				start_mark: token.start_mark,
 				end_mark:   token.end_mark,
 				implicit:   true,
-				style:      yaml_style_t(YAML_FLOW_MAPPING_STYLE),
+				style:      yaml_style_t(yaml_FLOW_MAPPING_STYLE),
 			}
 
 			skip_token(parser)
 			return true
-		} else if token.token_type != YAML_FLOW_SEQUENCE_END_TOKEN {
-			parser.states = append(parser.states, YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE)
+		} else if token.token_type != yaml_FLOW_SEQUENCE_END_TOKEN {
+			parser.states = append(parser.states, yaml_PARSE_FLOW_SEQUENCE_ENTRY_STATE)
 			return yaml_parser_parse_node(parser, event, false, false)
 		}
 	}
@@ -904,7 +904,7 @@ func yaml_parser_parse_flow_sequence_entry(parser *yaml_parser_t,
 	parser.marks = parser.marks[:len(parser.marks)-1]
 
 	*event = yaml_event_t{
-		event_type: YAML_SEQUENCE_END_EVENT,
+		event_type: yaml_SEQUENCE_END_EVENT,
 		start_mark: token.start_mark,
 		end_mark:   token.end_mark,
 	}
@@ -926,15 +926,15 @@ func yaml_parser_parse_flow_sequence_entry_mapping_key(parser *yaml_parser_t,
 		return false
 	}
 
-	if token.token_type != YAML_VALUE_TOKEN &&
-		token.token_type != YAML_FLOW_ENTRY_TOKEN &&
-		token.token_type != YAML_FLOW_SEQUENCE_END_TOKEN {
-		parser.states = append(parser.states, YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE)
+	if token.token_type != yaml_VALUE_TOKEN &&
+		token.token_type != yaml_FLOW_ENTRY_TOKEN &&
+		token.token_type != yaml_FLOW_SEQUENCE_END_TOKEN {
+		parser.states = append(parser.states, yaml_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE)
 		return yaml_parser_parse_node(parser, event, false, false)
 	} else {
 		mark := token.end_mark
 		skip_token(parser)
-		parser.state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE
+		parser.state = yaml_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE
 		return yaml_parser_process_empty_scalar(parser, event, mark)
 	}
 }
@@ -952,19 +952,19 @@ func yaml_parser_parse_flow_sequence_entry_mapping_value(parser *yaml_parser_t,
 		return false
 	}
 
-	if token.token_type == YAML_VALUE_TOKEN {
+	if token.token_type == yaml_VALUE_TOKEN {
 		skip_token(parser)
 		token = peek_token(parser)
 		if token == nil {
 			return false
 		}
-		if token.token_type != YAML_FLOW_ENTRY_TOKEN &&
-			token.token_type != YAML_FLOW_SEQUENCE_END_TOKEN {
-			parser.states = append(parser.states, YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE)
+		if token.token_type != yaml_FLOW_ENTRY_TOKEN &&
+			token.token_type != yaml_FLOW_SEQUENCE_END_TOKEN {
+			parser.states = append(parser.states, yaml_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE)
 			return yaml_parser_parse_node(parser, event, false, false)
 		}
 	}
-	parser.state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE
+	parser.state = yaml_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE
 	return yaml_parser_process_empty_scalar(parser, event, token.start_mark)
 }
 
@@ -981,9 +981,9 @@ func yaml_parser_parse_flow_sequence_entry_mapping_end(parser *yaml_parser_t,
 		return false
 	}
 
-	parser.state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE
+	parser.state = yaml_PARSE_FLOW_SEQUENCE_ENTRY_STATE
 	*event = yaml_event_t{
-		event_type: YAML_MAPPING_END_EVENT,
+		event_type: yaml_MAPPING_END_EVENT,
 		start_mark: token.start_mark,
 		end_mark:   token.start_mark,
 	}
@@ -1018,9 +1018,9 @@ func yaml_parser_parse_flow_mapping_key(parser *yaml_parser_t,
 		return false
 	}
 
-	if token.token_type != YAML_FLOW_MAPPING_END_TOKEN {
+	if token.token_type != yaml_FLOW_MAPPING_END_TOKEN {
 		if !first {
-			if token.token_type == YAML_FLOW_ENTRY_TOKEN {
+			if token.token_type == yaml_FLOW_ENTRY_TOKEN {
 				skip_token(parser)
 				token = peek_token(parser)
 				if token == nil {
@@ -1036,24 +1036,24 @@ func yaml_parser_parse_flow_mapping_key(parser *yaml_parser_t,
 			}
 		}
 
-		if token.token_type == YAML_KEY_TOKEN {
+		if token.token_type == yaml_KEY_TOKEN {
 			skip_token(parser)
 			token = peek_token(parser)
 			if token == nil {
 				return false
 			}
-			if token.token_type != YAML_VALUE_TOKEN &&
-				token.token_type != YAML_FLOW_ENTRY_TOKEN &&
-				token.token_type != YAML_FLOW_MAPPING_END_TOKEN {
-				parser.states = append(parser.states, YAML_PARSE_FLOW_MAPPING_VALUE_STATE)
+			if token.token_type != yaml_VALUE_TOKEN &&
+				token.token_type != yaml_FLOW_ENTRY_TOKEN &&
+				token.token_type != yaml_FLOW_MAPPING_END_TOKEN {
+				parser.states = append(parser.states, yaml_PARSE_FLOW_MAPPING_VALUE_STATE)
 				return yaml_parser_parse_node(parser, event, false, false)
 			} else {
-				parser.state = YAML_PARSE_FLOW_MAPPING_VALUE_STATE
+				parser.state = yaml_PARSE_FLOW_MAPPING_VALUE_STATE
 				return yaml_parser_process_empty_scalar(parser, event,
 					token.start_mark)
 			}
-		} else if token.token_type != YAML_FLOW_MAPPING_END_TOKEN {
-			parser.states = append(parser.states, YAML_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE)
+		} else if token.token_type != yaml_FLOW_MAPPING_END_TOKEN {
+			parser.states = append(parser.states, yaml_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE)
 			return yaml_parser_parse_node(parser, event, false, false)
 		}
 	}
@@ -1062,7 +1062,7 @@ func yaml_parser_parse_flow_mapping_key(parser *yaml_parser_t,
 	parser.states = parser.states[:len(parser.states)-1]
 	parser.marks = parser.marks[:len(parser.marks)-1]
 	*event = yaml_event_t{
-		event_type: YAML_MAPPING_END_EVENT,
+		event_type: yaml_MAPPING_END_EVENT,
 		start_mark: token.start_mark,
 		end_mark:   token.end_mark,
 	}
@@ -1085,25 +1085,25 @@ func yaml_parser_parse_flow_mapping_value(parser *yaml_parser_t,
 	}
 
 	if empty {
-		parser.state = YAML_PARSE_FLOW_MAPPING_KEY_STATE
+		parser.state = yaml_PARSE_FLOW_MAPPING_KEY_STATE
 		return yaml_parser_process_empty_scalar(parser, event,
 			token.start_mark)
 	}
 
-	if token.token_type == YAML_VALUE_TOKEN {
+	if token.token_type == yaml_VALUE_TOKEN {
 		skip_token(parser)
 		token = peek_token(parser)
 		if token == nil {
 			return false
 		}
-		if token.token_type != YAML_FLOW_ENTRY_TOKEN &&
-			token.token_type != YAML_FLOW_MAPPING_END_TOKEN {
-			parser.states = append(parser.states, YAML_PARSE_FLOW_MAPPING_KEY_STATE)
+		if token.token_type != yaml_FLOW_ENTRY_TOKEN &&
+			token.token_type != yaml_FLOW_MAPPING_END_TOKEN {
+			parser.states = append(parser.states, yaml_PARSE_FLOW_MAPPING_KEY_STATE)
 			return yaml_parser_parse_node(parser, event, false, false)
 		}
 	}
 
-	parser.state = YAML_PARSE_FLOW_MAPPING_KEY_STATE
+	parser.state = yaml_PARSE_FLOW_MAPPING_KEY_STATE
 	return yaml_parser_process_empty_scalar(parser, event, token.start_mark)
 }
 
@@ -1114,12 +1114,12 @@ func yaml_parser_parse_flow_mapping_value(parser *yaml_parser_t,
 func yaml_parser_process_empty_scalar(parser *yaml_parser_t, event *yaml_event_t,
 	mark yaml_mark_t) bool {
 	*event = yaml_event_t{
-		event_type: YAML_SCALAR_EVENT,
+		event_type: yaml_SCALAR_EVENT,
 		start_mark: mark,
 		end_mark:   mark,
 		value:      nil,
 		implicit:   true,
-		style:      yaml_style_t(YAML_PLAIN_SCALAR_STYLE),
+		style:      yaml_style_t(yaml_PLAIN_SCALAR_STYLE),
 	}
 
 	return true
@@ -1141,9 +1141,9 @@ func yaml_parser_process_directives(parser *yaml_parser_t,
 	var version_directive *yaml_version_directive_t
 	var tag_directives []yaml_tag_directive_t
 
-	for token.token_type == YAML_VERSION_DIRECTIVE_TOKEN ||
-		token.token_type == YAML_TAG_DIRECTIVE_TOKEN {
-		if token.token_type == YAML_VERSION_DIRECTIVE_TOKEN {
+	for token.token_type == yaml_VERSION_DIRECTIVE_TOKEN ||
+		token.token_type == yaml_TAG_DIRECTIVE_TOKEN {
+		if token.token_type == yaml_VERSION_DIRECTIVE_TOKEN {
 			if version_directive != nil {
 				yaml_parser_set_parser_error(parser,
 					"found duplicate %YAML directive", token.start_mark)
@@ -1159,7 +1159,7 @@ func yaml_parser_process_directives(parser *yaml_parser_t,
 				major: token.major,
 				minor: token.minor,
 			}
-		} else if token.token_type == YAML_TAG_DIRECTIVE_TOKEN {
+		} else if token.token_type == yaml_TAG_DIRECTIVE_TOKEN {
 			value := yaml_tag_directive_t{
 				handle: token.value,
 				prefix: token.prefix,

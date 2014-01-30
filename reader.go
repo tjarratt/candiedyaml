@@ -10,7 +10,7 @@ import (
 
 func yaml_parser_set_reader_error(parser *yaml_parser_t, problem string,
 	offset int, value int) bool {
-	parser.error = YAML_READER_ERROR
+	parser.error = yaml_READER_ERROR
 	parser.problem = problem
 	parser.problem_offset = offset
 	parser.problem_value = value
@@ -47,21 +47,21 @@ func yaml_parser_determine_encoding(parser *yaml_parser_t) bool {
 	remaining := len(raw) - pos
 	if remaining >= 2 &&
 		raw[pos] == BOM_UTF16LE[0] && raw[pos+1] == BOM_UTF16LE[1] {
-		parser.encoding = YAML_UTF16LE_ENCODING
+		parser.encoding = yaml_UTF16LE_ENCODING
 		parser.raw_buffer_pos += 2
 		parser.offset += 2
 	} else if remaining >= 2 &&
 		raw[pos] == BOM_UTF16BE[0] && raw[pos+1] == BOM_UTF16BE[1] {
-		parser.encoding = YAML_UTF16BE_ENCODING
+		parser.encoding = yaml_UTF16BE_ENCODING
 		parser.raw_buffer_pos += 2
 		parser.offset += 2
 	} else if remaining >= 3 &&
 		raw[pos] == BOM_UTF8[0] && raw[pos+1] == BOM_UTF8[1] && raw[pos+2] == BOM_UTF8[2] {
-		parser.encoding = YAML_UTF8_ENCODING
+		parser.encoding = yaml_UTF8_ENCODING
 		parser.raw_buffer_pos += 3
 		parser.offset += 3
 	} else {
-		parser.encoding = YAML_UTF8_ENCODING
+		parser.encoding = yaml_UTF8_ENCODING
 	}
 
 	return true
@@ -134,7 +134,7 @@ func yaml_parser_update_buffer(parser *yaml_parser_t, length int) bool {
 
 	/* Determine the input encoding if it is not known yet. */
 
-	if parser.encoding == YAML_ANY_ENCODING {
+	if parser.encoding == yaml_ANY_ENCODING {
 		if !yaml_parser_determine_encoding(parser) {
 			return false
 		}
@@ -178,7 +178,7 @@ func yaml_parser_update_buffer(parser *yaml_parser_t, length int) bool {
 			/* Decode the next character. */
 
 			switch parser.encoding {
-			case YAML_UTF8_ENCODING:
+			case yaml_UTF8_ENCODING:
 
 				/*
 				 * Decode a UTF-8 character.  Check RFC 3629
@@ -276,11 +276,11 @@ func yaml_parser_update_buffer(parser *yaml_parser_t, length int) bool {
 						"invalid Unicode character",
 						parser.offset, int(value))
 				}
-			case YAML_UTF16LE_ENCODING,
-				YAML_UTF16BE_ENCODING:
+			case yaml_UTF16LE_ENCODING,
+				yaml_UTF16BE_ENCODING:
 
 				var low, high int
-				if parser.encoding == YAML_UTF16LE_ENCODING {
+				if parser.encoding == yaml_UTF16LE_ENCODING {
 					low, high = 0, 1
 				} else {
 					high, low = 1, 0

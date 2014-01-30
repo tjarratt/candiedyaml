@@ -21,23 +21,23 @@ type yaml_encoding_t int
 
 const (
 	/** Let the parser choose the encoding. */
-	YAML_ANY_ENCODING yaml_encoding_t = iota
+	yaml_ANY_ENCODING yaml_encoding_t = iota
 	/** The defau lt UTF-8 encoding. */
-	YAML_UTF8_ENCODING
+	yaml_UTF8_ENCODING
 	/** The UTF-16-LE encoding with BOM. */
-	YAML_UTF16LE_ENCODING
+	yaml_UTF16LE_ENCODING
 	/** The UTF-16-BE encoding with BOM. */
-	YAML_UTF16BE_ENCODING
+	yaml_UTF16BE_ENCODING
 )
 
 /** Line break types. */
 type yaml_break_t int
 
 const (
-	YAML_ANY_BREAK  yaml_break_t = iota /** Let the parser choose the break type. */
-	YAML_CR_BREAK                       /** Use CR for line breaks (Mac style). */
-	YAML_LN_BREAK                       /** Use LN for line breaks (Unix style). */
-	YAML_CRLN_BREAK                     /** Use CR LN for line breaks (DOS style). */
+	yaml_ANY_BREAK  yaml_break_t = iota /** Let the parser choose the break type. */
+	yaml_CR_BREAK                       /** Use CR for line breaks (Mac style). */
+	yaml_LN_BREAK                       /** Use LN for line breaks (Unix style). */
+	yaml_CRLN_BREAK                     /** Use CR LN for line breaks (DOS style). */
 )
 
 /** Many bad things could happen with the parser and emitter. */
@@ -45,24 +45,24 @@ type yaml_error_type_t int
 
 const (
 	/** No error is produced. */
-	YAML_NO_ERROR yaml_error_type_t = iota
+	yaml_NO_ERROR yaml_error_type_t = iota
 
 	/** Cannot allocate or reallocate a block of memory. */
-	YAML_MEMORY_ERROR
+	yaml_MEMORY_ERROR
 
 	/** Cannot read or decode the input stream. */
-	YAML_READER_ERROR
+	yaml_READER_ERROR
 	/** Cannot scan the input stream. */
-	YAML_SCANNER_ERROR
+	yaml_SCANNER_ERROR
 	/** Cannot parse the input stream. */
-	YAML_PARSER_ERROR
+	yaml_PARSER_ERROR
 	/** Cannot compose a YAML document. */
-	YAML_COMPOSER_ERROR
+	yaml_COMPOSER_ERROR
 
 	/** Cannot write to the output stream. */
-	YAML_WRITER_ERROR
+	yaml_WRITER_ERROR
 	/** Cannot emit a YAML stream. */
-	YAML_EMITTER_ERROR
+	yaml_EMITTER_ERROR
 )
 
 /** The pointer position. */
@@ -91,20 +91,20 @@ type yaml_scalar_style_t yaml_style_t
 
 const (
 	/** Let the emitter choose the style. */
-	YAML_ANY_SCALAR_STYLE yaml_scalar_style_t = iota
+	yaml_ANY_SCALAR_STYLE yaml_scalar_style_t = iota
 
 	/** The plain scalar style. */
-	YAML_PLAIN_SCALAR_STYLE
+	yaml_PLAIN_SCALAR_STYLE
 
 	/** The single-quoted scalar style. */
-	YAML_SINGLE_QUOTED_SCALAR_STYLE
+	yaml_SINGLE_QUOTED_SCALAR_STYLE
 	/** The double-quoted scalar style. */
-	YAML_DOUBLE_QUOTED_SCALAR_STYLE
+	yaml_DOUBLE_QUOTED_SCALAR_STYLE
 
 	/** The literal scalar style. */
-	YAML_LITERAL_SCALAR_STYLE
+	yaml_LITERAL_SCALAR_STYLE
 	/** The folded scalar style. */
-	YAML_FOLDED_SCALAR_STYLE
+	yaml_FOLDED_SCALAR_STYLE
 )
 
 /** Sequence styles. */
@@ -112,12 +112,12 @@ type yaml_sequence_style_t yaml_style_t
 
 const (
 	/** Let the emitter choose the style. */
-	YAML_ANY_SEQUENCE_STYLE yaml_sequence_style_t = iota
+	yaml_ANY_SEQUENCE_STYLE yaml_sequence_style_t = iota
 
 	/** The block sequence style. */
-	YAML_BLOCK_SEQUENCE_STYLE
+	yaml_BLOCK_SEQUENCE_STYLE
 	/** The flow sequence style. */
-	YAML_FLOW_SEQUENCE_STYLE
+	yaml_FLOW_SEQUENCE_STYLE
 )
 
 /** Mapping styles. */
@@ -125,14 +125,14 @@ type yaml_mapping_style_t yaml_style_t
 
 const (
 	/** Let the emitter choose the style. */
-	YAML_ANY_MAPPING_STYLE yaml_mapping_style_t = iota
+	yaml_ANY_MAPPING_STYLE yaml_mapping_style_t = iota
 
 	/** The block mapping style. */
-	YAML_BLOCK_MAPPING_STYLE
+	yaml_BLOCK_MAPPING_STYLE
 	/** The flow mapping style. */
-	YAML_FLOW_MAPPING_STYLE
+	yaml_FLOW_MAPPING_STYLE
 
-/*    YAML_FLOW_SET_MAPPING_STYLE   */
+/*    yaml_FLOW_SET_MAPPING_STYLE   */
 )
 
 /** @} */
@@ -147,55 +147,55 @@ type yaml_token_type_t int
 
 const (
 	/** An empty token. */
-	YAML_NO_TOKEN yaml_token_type_t = iota
+	yaml_NO_TOKEN yaml_token_type_t = iota
 
 	/** A STREAM-START token. */
-	YAML_STREAM_START_TOKEN
+	yaml_STREAM_START_TOKEN
 	/** A STREAM-END token. */
-	YAML_STREAM_END_TOKEN
+	yaml_STREAM_END_TOKEN
 
 	/** A VERSION-DIRECTIVE token. */
-	YAML_VERSION_DIRECTIVE_TOKEN
+	yaml_VERSION_DIRECTIVE_TOKEN
 	/** A TAG-DIRECTIVE token. */
-	YAML_TAG_DIRECTIVE_TOKEN
+	yaml_TAG_DIRECTIVE_TOKEN
 	/** A DOCUMENT-START token. */
-	YAML_DOCUMENT_START_TOKEN
+	yaml_DOCUMENT_START_TOKEN
 	/** A DOCUMENT-END token. */
-	YAML_DOCUMENT_END_TOKEN
+	yaml_DOCUMENT_END_TOKEN
 
 	/** A BLOCK-SEQUENCE-START token. */
-	YAML_BLOCK_SEQUENCE_START_TOKEN
+	yaml_BLOCK_SEQUENCE_START_TOKEN
 	/** A BLOCK-SEQUENCE-END token. */
-	YAML_BLOCK_MAPPING_START_TOKEN
+	yaml_BLOCK_MAPPING_START_TOKEN
 	/** A BLOCK-END token. */
-	YAML_BLOCK_END_TOKEN
+	yaml_BLOCK_END_TOKEN
 
 	/** A FLOW-SEQUENCE-START token. */
-	YAML_FLOW_SEQUENCE_START_TOKEN
+	yaml_FLOW_SEQUENCE_START_TOKEN
 	/** A FLOW-SEQUENCE-END token. */
-	YAML_FLOW_SEQUENCE_END_TOKEN
+	yaml_FLOW_SEQUENCE_END_TOKEN
 	/** A FLOW-MAPPING-START token. */
-	YAML_FLOW_MAPPING_START_TOKEN
+	yaml_FLOW_MAPPING_START_TOKEN
 	/** A FLOW-MAPPING-END token. */
-	YAML_FLOW_MAPPING_END_TOKEN
+	yaml_FLOW_MAPPING_END_TOKEN
 
 	/** A BLOCK-ENTRY token. */
-	YAML_BLOCK_ENTRY_TOKEN
+	yaml_BLOCK_ENTRY_TOKEN
 	/** A FLOW-ENTRY token. */
-	YAML_FLOW_ENTRY_TOKEN
+	yaml_FLOW_ENTRY_TOKEN
 	/** A KEY token. */
-	YAML_KEY_TOKEN
+	yaml_KEY_TOKEN
 	/** A VALUE token. */
-	YAML_VALUE_TOKEN
+	yaml_VALUE_TOKEN
 
 	/** An ALIAS token. */
-	YAML_ALIAS_TOKEN
+	yaml_ALIAS_TOKEN
 	/** An ANCHOR token. */
-	YAML_ANCHOR_TOKEN
+	yaml_ANCHOR_TOKEN
 	/** A TAG token. */
-	YAML_TAG_TOKEN
+	yaml_TAG_TOKEN
 	/** A SCALAR token. */
-	YAML_SCALAR_TOKEN
+	yaml_SCALAR_TOKEN
 )
 
 /** The token structure. */
@@ -205,10 +205,10 @@ type yaml_token_t struct {
 	token_type yaml_token_type_t
 
 	/** The token data. */
-	/** The stream start (for @c YAML_STREAM_START_TOKEN). */
+	/** The stream start (for @c yaml_STREAM_START_TOKEN). */
 	encoding yaml_encoding_t
 
-	/** The alias (for @c YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN, YAML_SCALAR_TOKEN,YAML_TAG_TOKEN ). */
+	/** The alias (for @c yaml_ALIAS_TOKEN, yaml_ANCHOR_TOKEN, yaml_SCALAR_TOKEN,yaml_TAG_TOKEN ). */
 	/** The anchor (for @c ). */
 	/** The scalar value (for @c ). */
 	value []byte
@@ -216,14 +216,14 @@ type yaml_token_t struct {
 	/** The tag suffix. */
 	suffix []byte
 
-	/** The scalar value (for @c YAML_SCALAR_TOKEN). */
+	/** The scalar value (for @c yaml_SCALAR_TOKEN). */
 	/** The scalar style. */
 	style yaml_scalar_style_t
 
-	/** The version directive (for @c YAML_VERSION_DIRECTIVE_TOKEN). */
+	/** The version directive (for @c yaml_VERSION_DIRECTIVE_TOKEN). */
 	version_directive yaml_version_directive_t
 
-	/** The tag directive (for @c YAML_TAG_DIRECTIVE_TOKEN). */
+	/** The tag directive (for @c yaml_TAG_DIRECTIVE_TOKEN). */
 	prefix []byte
 
 	/** The beginning of the token. */
@@ -244,32 +244,32 @@ type yaml_event_type_t int
 
 const (
 	/** An empty event. */
-	YAML_NO_EVENT yaml_event_type_t = iota
+	yaml_NO_EVENT yaml_event_type_t = iota
 
 	/** A STREAM-START event. */
-	YAML_STREAM_START_EVENT
+	yaml_STREAM_START_EVENT
 	/** A STREAM-END event. */
-	YAML_STREAM_END_EVENT
+	yaml_STREAM_END_EVENT
 
 	/** A DOCUMENT-START event. */
-	YAML_DOCUMENT_START_EVENT
+	yaml_DOCUMENT_START_EVENT
 	/** A DOCUMENT-END event. */
-	YAML_DOCUMENT_END_EVENT
+	yaml_DOCUMENT_END_EVENT
 
 	/** An ALIAS event. */
-	YAML_ALIAS_EVENT
+	yaml_ALIAS_EVENT
 	/** A SCALAR event. */
-	YAML_SCALAR_EVENT
+	yaml_SCALAR_EVENT
 
 	/** A SEQUENCE-START event. */
-	YAML_SEQUENCE_START_EVENT
+	yaml_SEQUENCE_START_EVENT
 	/** A SEQUENCE-END event. */
-	YAML_SEQUENCE_END_EVENT
+	yaml_SEQUENCE_END_EVENT
 
 	/** A MAPPING-START event. */
-	YAML_MAPPING_START_EVENT
+	yaml_MAPPING_START_EVENT
 	/** A MAPPING-END event. */
-	YAML_MAPPING_END_EVENT
+	yaml_MAPPING_END_EVENT
 )
 
 /** The event structure. */
@@ -278,24 +278,24 @@ type yaml_event_t struct {
 	/** The event type. */
 	event_type yaml_event_type_t
 
-	/** The stream parameters (for @c YAML_STREAM_START_EVENT). */
+	/** The stream parameters (for @c yaml_STREAM_START_EVENT). */
 	encoding yaml_encoding_t
 
-	/** The document parameters (for @c YAML_DOCUMENT_START_EVENT). */
+	/** The document parameters (for @c yaml_DOCUMENT_START_EVENT). */
 	version_directive *yaml_version_directive_t
 
 	/** The beginning and end of the tag directives list. */
 	tag_directives []yaml_tag_directive_t
 
-	/** The document parameters (for @c YAML_DOCUMENT_START_EVENT, YAML_DOCUMENT_END_EVENT, YAML_SEQUENCE_START_EVENT,YAML_MAPPING_START_EVENT). */
+	/** The document parameters (for @c yaml_DOCUMENT_START_EVENT, yaml_DOCUMENT_END_EVENT, yaml_SEQUENCE_START_EVENT,yaml_MAPPING_START_EVENT). */
 	/** Is the document indicator implicit? */
 	implicit bool
 
-	/** The alias parameters (for @c YAML_ALIAS_EVENT,YAML_SCALAR_EVENT, YAML_SEQUENCE_START_EVENT, YAML_MAPPING_START_EVENT). */
+	/** The alias parameters (for @c yaml_ALIAS_EVENT,yaml_SCALAR_EVENT, yaml_SEQUENCE_START_EVENT, yaml_MAPPING_START_EVENT). */
 	/** The anchor. */
 	anchor []byte
 
-	/** The scalar parameters (for @c YAML_SCALAR_EVENT,YAML_SEQUENCE_START_EVENT, YAML_MAPPING_START_EVENT). */
+	/** The scalar parameters (for @c yaml_SCALAR_EVENT,yaml_SEQUENCE_START_EVENT, yaml_MAPPING_START_EVENT). */
 	/** The tag. */
 	tag []byte
 	/** The scalar value. */
@@ -306,7 +306,7 @@ type yaml_event_t struct {
 	/** Is the tag optional for any non-plain style? */
 	quoted_implicit bool
 
-	/** The sequence parameters (for @c YAML_SEQUENCE_START_EVENT, YAML_MAPPING_START_EVENT). */
+	/** The sequence parameters (for @c yaml_SEQUENCE_START_EVENT, yaml_MAPPING_START_EVENT). */
 	/** The sequence style. */
 	/** The scalar style. */
 	style yaml_style_t
@@ -322,29 +322,29 @@ type yaml_event_t struct {
 
 const (
 	/** The tag @c !!null with the only possible value: @c null. */
-	YAML_NULL_TAG = "tag:yaml.org,2002:null"
+	yaml_NULL_TAG = "tag:yaml.org,2002:null"
 	/** The tag @c !!bool with the values: @c true and @c falce. */
-	YAML_BOOL_TAG = "tag:yaml.org,2002:bool"
+	yaml_BOOL_TAG = "tag:yaml.org,2002:bool"
 	/** The tag @c !!str for string values. */
-	YAML_STR_TAG = "tag:yaml.org,2002:str"
+	yaml_STR_TAG = "tag:yaml.org,2002:str"
 	/** The tag @c !!int for integer values. */
-	YAML_INT_TAG = "tag:yaml.org,2002:int"
+	yaml_INT_TAG = "tag:yaml.org,2002:int"
 	/** The tag @c !!float for float values. */
-	YAML_FLOAT_TAG = "tag:yaml.org,2002:float"
+	yaml_FLOAT_TAG = "tag:yaml.org,2002:float"
 	/** The tag @c !!timestamp for date and time values. */
-	YAML_TIMESTAMP_TAG = "tag:yaml.org,2002:timestamp"
+	yaml_TIMESTAMP_TAG = "tag:yaml.org,2002:timestamp"
 
 	/** The tag @c !!seq is used to denote sequences. */
-	YAML_SEQ_TAG = "tag:yaml.org,2002:seq"
+	yaml_SEQ_TAG = "tag:yaml.org,2002:seq"
 	/** The tag @c !!map is used to denote mapping. */
-	YAML_MAP_TAG = "tag:yaml.org,2002:map"
+	yaml_MAP_TAG = "tag:yaml.org,2002:map"
 
 	/** The default scalar tag is @c !!str. */
-	YAML_DEFAULT_SCALAR_TAG = YAML_STR_TAG
+	yaml_DEFAULT_SCALAR_TAG = yaml_STR_TAG
 	/** The default sequence tag is @c !!seq. */
-	YAML_DEFAULT_SEQUENCE_TAG = YAML_SEQ_TAG
+	yaml_DEFAULT_SEQUENCE_TAG = yaml_SEQ_TAG
 	/** The default mapping tag is @c !!map. */
-	YAML_DEFAULT_MAPPING_TAG = YAML_MAP_TAG
+	yaml_DEFAULT_MAPPING_TAG = yaml_MAP_TAG
 )
 
 /** Node types. */
@@ -352,14 +352,14 @@ type yaml_node_type_t int
 
 const (
 	/** An empty node. */
-	YAML_NO_NODE yaml_node_type_t = iota
+	yaml_NO_NODE yaml_node_type_t = iota
 
 	/** A scalar node. */
-	YAML_SCALAR_NODE
+	yaml_SCALAR_NODE
 	/** A sequence node. */
-	YAML_SEQUENCE_NODE
+	yaml_SEQUENCE_NODE
 	/** A mapping node. */
-	YAML_MAPPING_NODE
+	yaml_MAPPING_NODE
 )
 
 /** An element of a sequence node. */
@@ -382,7 +382,7 @@ type yaml_node_t struct {
 	/** The node tag. */
 	tag []byte
 
-	/** The scalar parameters (for @c YAML_SCALAR_NODE). */
+	/** The scalar parameters (for @c yaml_SCALAR_NODE). */
 	scalar struct {
 		/** The scalar value. */
 		value []byte
@@ -390,7 +390,7 @@ type yaml_node_t struct {
 		style yaml_scalar_style_t
 	}
 
-	/** The sequence parameters (for @c YAML_SEQUENCE_NODE). */
+	/** The sequence parameters (for @c yaml_SEQUENCE_NODE). */
 	sequence struct {
 		/** The stack of sequence items. */
 		items []yaml_node_item_t
@@ -398,7 +398,7 @@ type yaml_node_t struct {
 		style yaml_sequence_style_t
 	}
 
-	/** The mapping parameters (for @c YAML_MAPPING_NODE). */
+	/** The mapping parameters (for @c yaml_MAPPING_NODE). */
 	mapping struct {
 		/** The stack of mapping pairs (key, value). */
 		pairs []yaml_node_pair_t
@@ -480,53 +480,53 @@ type yaml_parser_state_t int
 
 const (
 	/** Expect STREAM-START. */
-	YAML_PARSE_STREAM_START_STATE yaml_parser_state_t = iota
+	yaml_PARSE_STREAM_START_STATE yaml_parser_state_t = iota
 	/** Expect the beginning of an implicit document. */
-	YAML_PARSE_IMPLICIT_DOCUMENT_START_STATE
+	yaml_PARSE_IMPLICIT_DOCUMENT_START_STATE
 	/** Expect DOCUMENT-START. */
-	YAML_PARSE_DOCUMENT_START_STATE
+	yaml_PARSE_DOCUMENT_START_STATE
 	/** Expect the content of a document. */
-	YAML_PARSE_DOCUMENT_CONTENT_STATE
+	yaml_PARSE_DOCUMENT_CONTENT_STATE
 	/** Expect DOCUMENT-END. */
-	YAML_PARSE_DOCUMENT_END_STATE
+	yaml_PARSE_DOCUMENT_END_STATE
 	/** Expect a block node. */
-	YAML_PARSE_BLOCK_NODE_STATE
+	yaml_PARSE_BLOCK_NODE_STATE
 	/** Expect a block node or indentless sequence. */
-	YAML_PARSE_BLOCK_NODE_OR_INDENTLESS_SEQUENCE_STATE
+	yaml_PARSE_BLOCK_NODE_OR_INDENTLESS_SEQUENCE_STATE
 	/** Expect a flow node. */
-	YAML_PARSE_FLOW_NODE_STATE
+	yaml_PARSE_FLOW_NODE_STATE
 	/** Expect the first entry of a block sequence. */
-	YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE
+	yaml_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE
 	/** Expect an entry of a block sequence. */
-	YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE
+	yaml_PARSE_BLOCK_SEQUENCE_ENTRY_STATE
 	/** Expect an entry of an indentless sequence. */
-	YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE
+	yaml_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE
 	/** Expect the first key of a block mapping. */
-	YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE
+	yaml_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE
 	/** Expect a block mapping key. */
-	YAML_PARSE_BLOCK_MAPPING_KEY_STATE
+	yaml_PARSE_BLOCK_MAPPING_KEY_STATE
 	/** Expect a block mapping value. */
-	YAML_PARSE_BLOCK_MAPPING_VALUE_STATE
+	yaml_PARSE_BLOCK_MAPPING_VALUE_STATE
 	/** Expect the first entry of a flow sequence. */
-	YAML_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE
+	yaml_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE
 	/** Expect an entry of a flow sequence. */
-	YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE
+	yaml_PARSE_FLOW_SEQUENCE_ENTRY_STATE
 	/** Expect a key of an ordered mapping. */
-	YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_KEY_STATE
+	yaml_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_KEY_STATE
 	/** Expect a value of an ordered mapping. */
-	YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE
+	yaml_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE
 	/** Expect the and of an ordered mapping entry. */
-	YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE
+	yaml_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE
 	/** Expect the first key of a flow mapping. */
-	YAML_PARSE_FLOW_MAPPING_FIRST_KEY_STATE
+	yaml_PARSE_FLOW_MAPPING_FIRST_KEY_STATE
 	/** Expect a key of a flow mapping. */
-	YAML_PARSE_FLOW_MAPPING_KEY_STATE
+	yaml_PARSE_FLOW_MAPPING_KEY_STATE
 	/** Expect a value of a flow mapping. */
-	YAML_PARSE_FLOW_MAPPING_VALUE_STATE
+	yaml_PARSE_FLOW_MAPPING_VALUE_STATE
 	/** Expect an empty value of a flow mapping. */
-	YAML_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE
+	yaml_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE
 	/** Expect nothing. */
-	YAML_PARSE_END_STATE
+	yaml_PARSE_END_STATE
 )
 
 /**
@@ -716,41 +716,41 @@ type yaml_emitter_state_t int
 
 const (
 	/** Expect STREAM-START. */
-	YAML_EMIT_STREAM_START_STATE yaml_emitter_state_t = iota
+	yaml_EMIT_STREAM_START_STATE yaml_emitter_state_t = iota
 	/** Expect the first DOCUMENT-START or STREAM-END. */
-	YAML_EMIT_FIRST_DOCUMENT_START_STATE
+	yaml_EMIT_FIRST_DOCUMENT_START_STATE
 	/** Expect DOCUMENT-START or STREAM-END. */
-	YAML_EMIT_DOCUMENT_START_STATE
+	yaml_EMIT_DOCUMENT_START_STATE
 	/** Expect the content of a document. */
-	YAML_EMIT_DOCUMENT_CONTENT_STATE
+	yaml_EMIT_DOCUMENT_CONTENT_STATE
 	/** Expect DOCUMENT-END. */
-	YAML_EMIT_DOCUMENT_END_STATE
+	yaml_EMIT_DOCUMENT_END_STATE
 	/** Expect the first item of a flow sequence. */
-	YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE
+	yaml_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE
 	/** Expect an item of a flow sequence. */
-	YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE
+	yaml_EMIT_FLOW_SEQUENCE_ITEM_STATE
 	/** Expect the first key of a flow mapping. */
-	YAML_EMIT_FLOW_MAPPING_FIRST_KEY_STATE
+	yaml_EMIT_FLOW_MAPPING_FIRST_KEY_STATE
 	/** Expect a key of a flow mapping. */
-	YAML_EMIT_FLOW_MAPPING_KEY_STATE
+	yaml_EMIT_FLOW_MAPPING_KEY_STATE
 	/** Expect a value for a simple key of a flow mapping. */
-	YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE
+	yaml_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE
 	/** Expect a value of a flow mapping. */
-	YAML_EMIT_FLOW_MAPPING_VALUE_STATE
+	yaml_EMIT_FLOW_MAPPING_VALUE_STATE
 	/** Expect the first item of a block sequence. */
-	YAML_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE
+	yaml_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE
 	/** Expect an item of a block sequence. */
-	YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE
+	yaml_EMIT_BLOCK_SEQUENCE_ITEM_STATE
 	/** Expect the first key of a block mapping. */
-	YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE
+	yaml_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE
 	/** Expect the key of a block mapping. */
-	YAML_EMIT_BLOCK_MAPPING_KEY_STATE
+	yaml_EMIT_BLOCK_MAPPING_KEY_STATE
 	/** Expect a value for a simple key of a block mapping. */
-	YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE
+	yaml_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE
 	/** Expect a value of a block mapping. */
-	YAML_EMIT_BLOCK_MAPPING_VALUE_STATE
+	yaml_EMIT_BLOCK_MAPPING_VALUE_STATE
 	/** Expect nothing. */
-	YAML_EMIT_END_STATE
+	yaml_EMIT_END_STATE
 )
 
 /**

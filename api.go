@@ -92,7 +92,7 @@ func yaml_parser_set_input(parser *yaml_parser_t, handler yaml_read_handler_t) {
  */
 
 func yaml_parser_set_encoding(parser *yaml_parser_t, encoding yaml_encoding_t) {
-	if parser.encoding != YAML_ANY_ENCODING {
+	if parser.encoding != yaml_ANY_ENCODING {
 		panic("encoding already set")
 	}
 
@@ -179,7 +179,7 @@ func yaml_emitter_set_output(emitter *yaml_emitter_t, handler yaml_write_handler
  */
 
 func yaml_emitter_set_encoding(emitter *yaml_emitter_t, encoding yaml_encoding_t) {
-	if emitter.encoding != YAML_ANY_ENCODING {
+	if emitter.encoding != yaml_ANY_ENCODING {
 		panic("encoding already set")
 	}
 
@@ -236,32 +236,32 @@ func yaml_emitter_set_break(emitter *yaml_emitter_t, line_break yaml_break_t) {
  * Destroy a token object.
  */
 
-// YAML_DECLARE(void)
+// yaml_DECLARE(void)
 // yaml_token_delete(yaml_token_t *token)
 // {
 //     assert(token);  /* Non-NULL token object expected. */
 //
 //     switch (token.type)
 //     {
-//         case YAML_TAG_DIRECTIVE_TOKEN:
+//         case yaml_TAG_DIRECTIVE_TOKEN:
 //             yaml_free(token.data.tag_directive.handle);
 //             yaml_free(token.data.tag_directive.prefix);
 //             break;
 //
-//         case YAML_ALIAS_TOKEN:
+//         case yaml_ALIAS_TOKEN:
 //             yaml_free(token.data.alias.value);
 //             break;
 //
-//         case YAML_ANCHOR_TOKEN:
+//         case yaml_ANCHOR_TOKEN:
 //             yaml_free(token.data.anchor.value);
 //             break;
 //
-//         case YAML_TAG_TOKEN:
+//         case yaml_TAG_TOKEN:
 //             yaml_free(token.data.tag.handle);
 //             yaml_free(token.data.tag.suffix);
 //             break;
 //
-//         case YAML_SCALAR_TOKEN:
+//         case yaml_SCALAR_TOKEN:
 //             yaml_free(token.data.scalar.value);
 //             break;
 //
@@ -323,7 +323,7 @@ func yaml_emitter_set_break(emitter *yaml_emitter_t, line_break yaml_break_t) {
 
 func yaml_stream_start_event_initialize(event *yaml_event_t, encoding yaml_encoding_t) bool {
 	*event = yaml_event_t{
-		event_type: YAML_STREAM_START_EVENT,
+		event_type: yaml_STREAM_START_EVENT,
 		encoding:   encoding,
 	}
 	return true
@@ -335,7 +335,7 @@ func yaml_stream_start_event_initialize(event *yaml_event_t, encoding yaml_encod
 
 func yaml_stream_end_event_initialize(event *yaml_event_t) bool {
 	*event = yaml_event_t{
-		event_type: YAML_STREAM_END_EVENT,
+		event_type: yaml_STREAM_END_EVENT,
 	}
 	return true
 }
@@ -349,7 +349,7 @@ func yaml_document_start_event_initialize(event *yaml_event_t,
 	tag_directives []yaml_tag_directive_t,
 	implicit bool) bool {
 	*event = yaml_event_t{
-		event_type:        YAML_DOCUMENT_START_EVENT,
+		event_type:        yaml_DOCUMENT_START_EVENT,
 		version_directive: version_directive,
 		tag_directives:    tag_directives,
 		implicit:          implicit,
@@ -364,7 +364,7 @@ func yaml_document_start_event_initialize(event *yaml_event_t,
 
 func yaml_document_end_event_initialize(event *yaml_event_t, implicit bool) bool {
 	*event = yaml_event_t{
-		event_type: YAML_DOCUMENT_END_EVENT,
+		event_type: yaml_DOCUMENT_END_EVENT,
 		implicit:   implicit,
 	}
 
@@ -377,7 +377,7 @@ func yaml_document_end_event_initialize(event *yaml_event_t, implicit bool) bool
 
 func yaml_alias_event_initialize(event *yaml_event_t, anchor []byte) bool {
 	*event = yaml_event_t{
-		event_type: YAML_ALIAS_EVENT,
+		event_type: yaml_ALIAS_EVENT,
 		anchor:     anchor,
 	}
 
@@ -395,7 +395,7 @@ func yaml_scalar_event_initialize(event *yaml_event_t,
 	style yaml_scalar_style_t) bool {
 
 	*event = yaml_event_t{
-		event_type:      YAML_SCALAR_EVENT,
+		event_type:      yaml_SCALAR_EVENT,
 		anchor:          anchor,
 		tag:             tag,
 		value:           value,
@@ -414,7 +414,7 @@ func yaml_scalar_event_initialize(event *yaml_event_t,
 func yaml_sequence_start_event_initialize(event *yaml_event_t,
 	anchor []byte, tag []byte, implicit bool, style yaml_sequence_style_t) bool {
 	*event = yaml_event_t{
-		event_type: YAML_SEQUENCE_START_EVENT,
+		event_type: yaml_SEQUENCE_START_EVENT,
 		anchor:     anchor,
 		tag:        tag,
 		implicit:   implicit,
@@ -431,7 +431,7 @@ func yaml_sequence_start_event_initialize(event *yaml_event_t,
 
 func yaml_sequence_end_event_initialize(event *yaml_event_t) bool {
 	*event = yaml_event_t{
-		event_type: YAML_SEQUENCE_END_EVENT,
+		event_type: yaml_SEQUENCE_END_EVENT,
 	}
 	return true
 }
@@ -443,7 +443,7 @@ func yaml_sequence_end_event_initialize(event *yaml_event_t) bool {
 func yaml_mapping_start_event_initialize(event *yaml_event_t,
 	anchor []byte, tag []byte, implicit bool, style yaml_mapping_style_t) bool {
 	*event = yaml_event_t{
-		event_type: YAML_MAPPING_START_EVENT,
+		event_type: yaml_MAPPING_START_EVENT,
 		anchor:     anchor,
 		tag:        tag,
 		implicit:   implicit,
@@ -459,7 +459,7 @@ func yaml_mapping_start_event_initialize(event *yaml_event_t,
 
 func yaml_mapping_end_event_initialize(event *yaml_event_t) bool {
 	*event = yaml_event_t{
-		event_type: YAML_MAPPING_END_EVENT,
+		event_type: yaml_MAPPING_END_EVENT,
 	}
 	return true
 
@@ -564,7 +564,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //  * Destroy a document object.
 //  */
 //
-// YAML_DECLARE(void)
+// yaml_DECLARE(void)
 // yaml_document_delete(document *yaml_document_t)
 // {
 //     struct {
@@ -572,7 +572,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //     } context;
 //     yaml_tag_directive_t *tag_directive;
 //
-//     context.error = YAML_NO_ERROR;  /* Eliminate a compliler warning. */
+//     context.error = yaml_NO_ERROR;  /* Eliminate a compliler warning. */
 //
 //     assert(document);   /* Non-NULL document object is expected. */
 //
@@ -580,13 +580,13 @@ func yaml_event_delete(event *yaml_event_t) {
 //         yaml_node_t node = POP(&context, document.nodes);
 //         yaml_free(node.tag);
 //         switch (node.type) {
-//             case YAML_SCALAR_NODE:
+//             case yaml_SCALAR_NODE:
 //                 yaml_free(node.data.scalar.value);
 //                 break;
-//             case YAML_SEQUENCE_NODE:
+//             case yaml_SEQUENCE_NODE:
 //                 STACK_DEL(&context, node.data.sequence.items);
 //                 break;
-//             case YAML_MAPPING_NODE:
+//             case yaml_MAPPING_NODE:
 //                 STACK_DEL(&context, node.data.mapping.pairs);
 //                 break;
 //             default:
@@ -611,7 +611,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //  * Get a document node.
 //  */
 //
-// YAML_DECLARE(yaml_node_t *)
+// yaml_DECLARE(yaml_node_t *)
 // yaml_document_get_node(document *yaml_document_t, int index)
 // {
 //     assert(document);   /* Non-NULL document object is expected. */
@@ -626,7 +626,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //  * Get the root object.
 //  */
 //
-// YAML_DECLARE(yaml_node_t *)
+// yaml_DECLARE(yaml_node_t *)
 // yaml_document_get_root_node(document *yaml_document_t)
 // {
 //     assert(document);   /* Non-NULL document object is expected. */
@@ -641,7 +641,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //  * Add a scalar node to a document.
 //  */
 //
-// YAML_DECLARE(int)
+// yaml_DECLARE(int)
 // yaml_document_add_scalar(document *yaml_document_t,
 //         yaml_char_t *tag, yaml_char_t *value, int length,
 //         yaml_scalar_style_t style)
@@ -658,7 +658,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //     assert(value);      /* Non-NULL value is expected. */
 //
 //     if (!tag) {
-//         tag = (yaml_char_t *)YAML_DEFAULT_SCALAR_TAG;
+//         tag = (yaml_char_t *)yaml_DEFAULT_SCALAR_TAG;
 //     }
 //
 //     if (!yaml_check_utf8(tag, strlen((char *)tag))) goto error;
@@ -691,7 +691,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //  * Add a sequence node to a document.
 //  */
 //
-// YAML_DECLARE(int)
+// yaml_DECLARE(int)
 // yaml_document_add_sequence(document *yaml_document_t,
 //         yaml_char_t *tag, yaml_sequence_style_t style)
 // {
@@ -710,7 +710,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //     assert(document);   /* Non-NULL document object is expected. */
 //
 //     if (!tag) {
-//         tag = (yaml_char_t *)YAML_DEFAULT_SEQUENCE_TAG;
+//         tag = (yaml_char_t *)yaml_DEFAULT_SEQUENCE_TAG;
 //     }
 //
 //     if (!yaml_check_utf8(tag, strlen((char *)tag))) goto error;
@@ -736,7 +736,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //  * Add a mapping node to a document.
 //  */
 //
-// YAML_DECLARE(int)
+// yaml_DECLARE(int)
 // yaml_document_add_mapping(document *yaml_document_t,
 //         yaml_char_t *tag, yaml_mapping_style_t style)
 // {
@@ -755,7 +755,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //     assert(document);   /* Non-NULL document object is expected. */
 //
 //     if (!tag) {
-//         tag = (yaml_char_t *)YAML_DEFAULT_MAPPING_TAG;
+//         tag = (yaml_char_t *)yaml_DEFAULT_MAPPING_TAG;
 //     }
 //
 //     if (!yaml_check_utf8(tag, strlen((char *)tag))) goto error;
@@ -781,7 +781,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //  * Append an item to a sequence node.
 //  */
 //
-// YAML_DECLARE(int)
+// yaml_DECLARE(int)
 // yaml_document_append_sequence_item(document *yaml_document_t,
 //         int sequence, int item)
 // {
@@ -793,7 +793,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //     assert(sequence > 0
 //             && document.nodes.start + sequence <= document.nodes.top);
 //                             /* Valid sequence id is required. */
-//     assert(document.nodes.start[sequence-1].type == YAML_SEQUENCE_NODE);
+//     assert(document.nodes.start[sequence-1].type == yaml_SEQUENCE_NODE);
 //                             /* A sequence node is required. */
 //     assert(item > 0 && document.nodes.start + item <= document.nodes.top);
 //                             /* Valid item id is required. */
@@ -809,7 +809,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //  * Append a pair of a key and a value to a mapping node.
 //  */
 //
-// YAML_DECLARE(int)
+// yaml_DECLARE(int)
 // yaml_document_append_mapping_pair(document *yaml_document_t,
 //         int mapping, int key, int value)
 // {
@@ -823,7 +823,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //     assert(mapping > 0
 //             && document.nodes.start + mapping <= document.nodes.top);
 //                             /* Valid mapping id is required. */
-//     assert(document.nodes.start[mapping-1].type == YAML_MAPPING_NODE);
+//     assert(document.nodes.start[mapping-1].type == yaml_MAPPING_NODE);
 //                             /* A mapping node is required. */
 //     assert(key > 0 && document.nodes.start + key <= document.nodes.top);
 //                             /* Valid key id is required. */

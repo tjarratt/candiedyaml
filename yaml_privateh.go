@@ -250,30 +250,30 @@ func is_bom_at(b []byte, i int) bool {
 //  * Memory management.
 //  */
 //
-// YAML_DECLARE(void *)
+// yaml_DECLARE(void *)
 // yaml_malloc(size_t size);
 //
-// YAML_DECLARE(void *)
+// yaml_DECLARE(void *)
 // yaml_realloc(void *ptr, size_t size);
 //
-// YAML_DECLARE(void)
+// yaml_DECLARE(void)
 // yaml_free(void *ptr);
 //
-// YAML_DECLARE(yaml_char_t *)
+// yaml_DECLARE(yaml_char_t *)
 // yaml_strdup(const yaml_char_t *);
 //
 // /*
 //  * Reader: Ensure that the buffer contains at least `length` characters.
 //  */
 //
-// YAML_DECLARE(int)
+// yaml_DECLARE(int)
 // yaml_parser_update_buffer(yaml_parser_t *parser, size_t length);
 //
 // /*
 //  * Scanner: Ensure that the token stack contains at least one token ready.
 //  */
 //
-// YAML_DECLARE(int)
+// yaml_DECLARE(int)
 // yaml_parser_fetch_more_tokens(yaml_parser_t *parser);
 //
 // /*
@@ -321,7 +321,7 @@ func is_bom_at(b []byte, i int) bool {
 //         ((buffer).last = (buffer).pointer = (buffer).start,                     \
 //          (buffer).end = (buffer).start+(size),                                  \
 //          1) :                                                                   \
-//         ((context)->error = YAML_MEMORY_ERROR,                                  \
+//         ((context)->error = yaml_MEMORY_ERROR,                                  \
 //          0))
 //
 // #define BUFFER_DEL(context,buffer)                                              \
@@ -338,11 +338,11 @@ func is_bom_at(b []byte, i int) bool {
 //     yaml_char_t *pointer;
 // } yaml_string_t;
 //
-// YAML_DECLARE(int)
+// yaml_DECLARE(int)
 // yaml_string_extend(yaml_char_t **start,
 //         yaml_char_t **pointer, yaml_char_t **end);
 //
-// YAML_DECLARE(int)
+// yaml_DECLARE(int)
 // yaml_string_join(
 //         yaml_char_t **a_start, yaml_char_t **a_pointer, yaml_char_t **a_end,
 //         yaml_char_t **b_start, yaml_char_t **b_pointer, yaml_char_t **b_end);
@@ -362,7 +362,7 @@ func is_bom_at(b []byte, i int) bool {
 //          (string).end = (string).start+(size),                                  \
 //          memset((string).start, 0, (size)),                                     \
 //          1) :                                                                   \
-//         ((context)->error = YAML_MEMORY_ERROR,                                  \
+//         ((context)->error = yaml_MEMORY_ERROR,                                  \
 //          0))
 //
 // #define STRING_DEL(context,string)                                              \
@@ -384,7 +384,7 @@ func is_bom_at(b []byte, i int) bool {
 //                        &(string_b).pointer, &(string_b).end)) ?                 \
 //         ((string_b).pointer = (string_b).start,                                 \
 //          1) :                                                                   \
-//         ((context)->error = YAML_MEMORY_ERROR,                                  \
+//         ((context)->error = yaml_MEMORY_ERROR,                                  \
 //          0))
 //
 // /*
@@ -638,10 +638,10 @@ func is_bom_at(b []byte, i int) bool {
 //  * Stack and queue management.
 //  */
 //
-// YAML_DECLARE(int)
+// yaml_DECLARE(int)
 // yaml_stack_extend(void **start, void **top, void **end);
 //
-// YAML_DECLARE(int)
+// yaml_DECLARE(int)
 // yaml_queue_extend(void **start, void **head, void **tail, void **end);
 //
 // #define STACK_INIT(context,stack,size)                                          \
@@ -649,7 +649,7 @@ func is_bom_at(b []byte, i int) bool {
 //         ((stack).top = (stack).start,                                           \
 //          (stack).end = (stack).start+(size),                                    \
 //          1) :                                                                   \
-//         ((context)->error = YAML_MEMORY_ERROR,                                  \
+//         ((context)->error = yaml_MEMORY_ERROR,                                  \
 //          0))
 //
 // #define STACK_DEL(context,stack)                                                \
@@ -665,7 +665,7 @@ func is_bom_at(b []byte, i int) bool {
 //               (void **)&(stack).top, (void **)&(stack).end)) ?                  \
 //         (*((stack).top++) = value,                                              \
 //          1) :                                                                   \
-//         ((context)->error = YAML_MEMORY_ERROR,                                  \
+//         ((context)->error = yaml_MEMORY_ERROR,                                  \
 //          0))
 //
 // #define POP(context,stack)                                                      \
@@ -676,7 +676,7 @@ func is_bom_at(b []byte, i int) bool {
 //         ((queue).head = (queue).tail = (queue).start,                           \
 //          (queue).end = (queue).start+(size),                                    \
 //          1) :                                                                   \
-//         ((context)->error = YAML_MEMORY_ERROR,                                  \
+//         ((context)->error = yaml_MEMORY_ERROR,                                  \
 //          0))
 //
 // #define QUEUE_DEL(context,queue)                                                \
@@ -692,7 +692,7 @@ func is_bom_at(b []byte, i int) bool {
 //             (void **)&(queue).tail, (void **)&(queue).end)) ?                   \
 //         (*((queue).tail++) = value,                                             \
 //          1) :                                                                   \
-//         ((context)->error = YAML_MEMORY_ERROR,                                  \
+//         ((context)->error = yaml_MEMORY_ERROR,                                  \
 //          0))
 //
 // #define DEQUEUE(context,queue)                                                  \
@@ -707,7 +707,7 @@ func is_bom_at(b []byte, i int) bool {
 //          *((queue).head+(index)) = value,                                       \
 //          (queue).tail++,                                                        \
 //          1) :                                                                   \
-//         ((context)->error = YAML_MEMORY_ERROR,                                  \
+//         ((context)->error = yaml_MEMORY_ERROR,                                  \
 //          0))
 //
 // /*
@@ -721,38 +721,38 @@ func is_bom_at(b []byte, i int) bool {
 //      (token).end_mark = (token_end_mark))
 //
 // #define STREAM_START_TOKEN_INIT(token,token_encoding,start_mark,end_mark)       \
-//     (TOKEN_INIT((token),YAML_STREAM_START_TOKEN,(start_mark),(end_mark)),       \
+//     (TOKEN_INIT((token),yaml_STREAM_START_TOKEN,(start_mark),(end_mark)),       \
 //      (token).data.stream_start.encoding = (token_encoding))
 //
 // #define STREAM_END_TOKEN_INIT(token,start_mark,end_mark)                        \
-//     (TOKEN_INIT((token),YAML_STREAM_END_TOKEN,(start_mark),(end_mark)))
+//     (TOKEN_INIT((token),yaml_STREAM_END_TOKEN,(start_mark),(end_mark)))
 //
 // #define ALIAS_TOKEN_INIT(token,token_value,start_mark,end_mark)                 \
-//     (TOKEN_INIT((token),YAML_ALIAS_TOKEN,(start_mark),(end_mark)),              \
+//     (TOKEN_INIT((token),yaml_ALIAS_TOKEN,(start_mark),(end_mark)),              \
 //      (token).data.alias.value = (token_value))
 //
 // #define ANCHOR_TOKEN_INIT(token,token_value,start_mark,end_mark)                \
-//     (TOKEN_INIT((token),YAML_ANCHOR_TOKEN,(start_mark),(end_mark)),             \
+//     (TOKEN_INIT((token),yaml_ANCHOR_TOKEN,(start_mark),(end_mark)),             \
 //      (token).data.anchor.value = (token_value))
 //
 // #define TAG_TOKEN_INIT(token,token_handle,token_suffix,start_mark,end_mark)     \
-//     (TOKEN_INIT((token),YAML_TAG_TOKEN,(start_mark),(end_mark)),                \
+//     (TOKEN_INIT((token),yaml_TAG_TOKEN,(start_mark),(end_mark)),                \
 //      (token).data.tag.handle = (token_handle),                                  \
 //      (token).data.tag.suffix = (token_suffix))
 //
 // #define SCALAR_TOKEN_INIT(token,token_value,token_length,token_style,start_mark,end_mark)   \
-//     (TOKEN_INIT((token),YAML_SCALAR_TOKEN,(start_mark),(end_mark)),             \
+//     (TOKEN_INIT((token),yaml_SCALAR_TOKEN,(start_mark),(end_mark)),             \
 //      (token).data.scalar.value = (token_value),                                 \
 //      (token).data.scalar.length = (token_length),                               \
 //      (token).data.scalar.style = (token_style))
 //
 // #define VERSION_DIRECTIVE_TOKEN_INIT(token,token_major,token_minor,start_mark,end_mark)     \
-//     (TOKEN_INIT((token),YAML_VERSION_DIRECTIVE_TOKEN,(start_mark),(end_mark)),  \
+//     (TOKEN_INIT((token),yaml_VERSION_DIRECTIVE_TOKEN,(start_mark),(end_mark)),  \
 //      (token).data.version_directive.major = (token_major),                      \
 //      (token).data.version_directive.minor = (token_minor))
 //
 // #define TAG_DIRECTIVE_TOKEN_INIT(token,token_handle,token_prefix,start_mark,end_mark)       \
-//     (TOKEN_INIT((token),YAML_TAG_DIRECTIVE_TOKEN,(start_mark),(end_mark)),      \
+//     (TOKEN_INIT((token),yaml_TAG_DIRECTIVE_TOKEN,(start_mark),(end_mark)),      \
 //      (token).data.tag_directive.handle = (token_handle),                        \
 //      (token).data.tag_directive.prefix = (token_prefix))
 //
@@ -767,31 +767,31 @@ func is_bom_at(b []byte, i int) bool {
 //      (event).end_mark = (event_end_mark))
 //
 // #define STREAM_START_EVENT_INIT(event,event_encoding,start_mark,end_mark)       \
-//     (EVENT_INIT((event),YAML_STREAM_START_EVENT,(start_mark),(end_mark)),       \
+//     (EVENT_INIT((event),yaml_STREAM_START_EVENT,(start_mark),(end_mark)),       \
 //      (event).data.stream_start.encoding = (event_encoding))
 //
 // #define STREAM_END_EVENT_INIT(event,start_mark,end_mark)                        \
-//     (EVENT_INIT((event),YAML_STREAM_END_EVENT,(start_mark),(end_mark)))
+//     (EVENT_INIT((event),yaml_STREAM_END_EVENT,(start_mark),(end_mark)))
 //
 // #define DOCUMENT_START_EVENT_INIT(event,event_version_directive,                \
 //         event_tag_directives_start,event_tag_directives_end,event_implicit,start_mark,end_mark) \
-//     (EVENT_INIT((event),YAML_DOCUMENT_START_EVENT,(start_mark),(end_mark)),     \
+//     (EVENT_INIT((event),yaml_DOCUMENT_START_EVENT,(start_mark),(end_mark)),     \
 //      (event).data.document_start.version_directive = (event_version_directive), \
 //      (event).data.document_start.tag_directives.start = (event_tag_directives_start),   \
 //      (event).data.document_start.tag_directives.end = (event_tag_directives_end),   \
 //      (event).data.document_start.implicit = (event_implicit))
 //
 // #define DOCUMENT_END_EVENT_INIT(event,event_implicit,start_mark,end_mark)       \
-//     (EVENT_INIT((event),YAML_DOCUMENT_END_EVENT,(start_mark),(end_mark)),       \
+//     (EVENT_INIT((event),yaml_DOCUMENT_END_EVENT,(start_mark),(end_mark)),       \
 //      (event).data.document_end.implicit = (event_implicit))
 //
 // #define ALIAS_EVENT_INIT(event,event_anchor,start_mark,end_mark)                \
-//     (EVENT_INIT((event),YAML_ALIAS_EVENT,(start_mark),(end_mark)),              \
+//     (EVENT_INIT((event),yaml_ALIAS_EVENT,(start_mark),(end_mark)),              \
 //      (event).data.alias.anchor = (event_anchor))
 //
 // #define SCALAR_EVENT_INIT(event,event_anchor,event_tag,event_value,event_length,    \
 //         event_plain_implicit, event_quoted_implicit,event_style,start_mark,end_mark)    \
-//     (EVENT_INIT((event),YAML_SCALAR_EVENT,(start_mark),(end_mark)),             \
+//     (EVENT_INIT((event),yaml_SCALAR_EVENT,(start_mark),(end_mark)),             \
 //      (event).data.scalar.anchor = (event_anchor),                               \
 //      (event).data.scalar.tag = (event_tag),                                     \
 //      (event).data.scalar.value = (event_value),                                 \
@@ -802,25 +802,25 @@ func is_bom_at(b []byte, i int) bool {
 //
 // #define SEQUENCE_START_EVENT_INIT(event,event_anchor,event_tag,                 \
 //         event_implicit,event_style,start_mark,end_mark)                         \
-//     (EVENT_INIT((event),YAML_SEQUENCE_START_EVENT,(start_mark),(end_mark)),     \
+//     (EVENT_INIT((event),yaml_SEQUENCE_START_EVENT,(start_mark),(end_mark)),     \
 //      (event).data.sequence_start.anchor = (event_anchor),                       \
 //      (event).data.sequence_start.tag = (event_tag),                             \
 //      (event).data.sequence_start.implicit = (event_implicit),                   \
 //      (event).data.sequence_start.style = (event_style))
 //
 // #define SEQUENCE_END_EVENT_INIT(event,start_mark,end_mark)                      \
-//     (EVENT_INIT((event),YAML_SEQUENCE_END_EVENT,(start_mark),(end_mark)))
+//     (EVENT_INIT((event),yaml_SEQUENCE_END_EVENT,(start_mark),(end_mark)))
 //
 // #define MAPPING_START_EVENT_INIT(event,event_anchor,event_tag,                  \
 //         event_implicit,event_style,start_mark,end_mark)                         \
-//     (EVENT_INIT((event),YAML_MAPPING_START_EVENT,(start_mark),(end_mark)),      \
+//     (EVENT_INIT((event),yaml_MAPPING_START_EVENT,(start_mark),(end_mark)),      \
 //      (event).data.mapping_start.anchor = (event_anchor),                        \
 //      (event).data.mapping_start.tag = (event_tag),                              \
 //      (event).data.mapping_start.implicit = (event_implicit),                    \
 //      (event).data.mapping_start.style = (event_style))
 //
 // #define MAPPING_END_EVENT_INIT(event,start_mark,end_mark)                       \
-//     (EVENT_INIT((event),YAML_MAPPING_END_EVENT,(start_mark),(end_mark)))
+//     (EVENT_INIT((event),yaml_MAPPING_END_EVENT,(start_mark),(end_mark)))
 //
 // /*
 //  * Document initializer.
@@ -855,14 +855,14 @@ func is_bom_at(b []byte, i int) bool {
 //
 // #define SCALAR_NODE_INIT(node,node_tag,node_value,node_length,                  \
 //         node_style,start_mark,end_mark)                                         \
-//     (NODE_INIT((node),YAML_SCALAR_NODE,(node_tag),(start_mark),(end_mark)),     \
+//     (NODE_INIT((node),yaml_SCALAR_NODE,(node_tag),(start_mark),(end_mark)),     \
 //      (node).data.scalar.value = (node_value),                                   \
 //      (node).data.scalar.length = (node_length),                                 \
 //      (node).data.scalar.style = (node_style))
 //
 // #define SEQUENCE_NODE_INIT(node,node_tag,node_items_start,node_items_end,       \
 //         node_style,start_mark,end_mark)                                         \
-//     (NODE_INIT((node),YAML_SEQUENCE_NODE,(node_tag),(start_mark),(end_mark)),   \
+//     (NODE_INIT((node),yaml_SEQUENCE_NODE,(node_tag),(start_mark),(end_mark)),   \
 //      (node).data.sequence.items.start = (node_items_start),                     \
 //      (node).data.sequence.items.end = (node_items_end),                         \
 //      (node).data.sequence.items.top = (node_items_start),                       \
@@ -870,7 +870,7 @@ func is_bom_at(b []byte, i int) bool {
 //
 // #define MAPPING_NODE_INIT(node,node_tag,node_pairs_start,node_pairs_end,        \
 //         node_style,start_mark,end_mark)                                         \
-//     (NODE_INIT((node),YAML_MAPPING_NODE,(node_tag),(start_mark),(end_mark)),    \
+//     (NODE_INIT((node),yaml_MAPPING_NODE,(node_tag),(start_mark),(end_mark)),    \
 //      (node).data.mapping.pairs.start = (node_pairs_start),                      \
 //      (node).data.mapping.pairs.end = (node_pairs_end),                          \
 //      (node).data.mapping.pairs.top = (node_pairs_start),                        \

@@ -43,13 +43,13 @@ func put_break(emitter *yaml_emitter_t) bool {
 		return false
 	}
 	switch emitter.line_break {
-	case YAML_CR_BREAK:
+	case yaml_CR_BREAK:
 		emitter.buffer[emitter.buffer_pos] = '\r'
 		emitter.buffer_pos++
-	case YAML_LN_BREAK:
+	case yaml_LN_BREAK:
 		emitter.buffer[emitter.buffer_pos] = '\n'
 		emitter.buffer_pos++
-	case YAML_CRLN_BREAK:
+	case yaml_CRLN_BREAK:
 		emitter.buffer[emitter.buffer_pos] = '\r'
 		emitter.buffer[emitter.buffer_pos] = '\n'
 		emitter.buffer_pos += 2
@@ -99,7 +99,7 @@ func write_break(emitter *yaml_emitter_t, src []byte, src_pos *int) bool {
  */
 
 func yaml_emitter_set_emitter_error(emitter *yaml_emitter_t, problem string) bool {
-	emitter.error = YAML_EMITTER_ERROR
+	emitter.error = yaml_EMITTER_ERROR
 	emitter.problem = problem
 	return false
 }
@@ -140,11 +140,11 @@ func yaml_emitter_need_more_events(emitter *yaml_emitter_t) bool {
 
 	accumulate := 0
 	switch emitter.events[emitter.events_head].event_type {
-	case YAML_DOCUMENT_START_EVENT:
+	case yaml_DOCUMENT_START_EVENT:
 		accumulate = 1
-	case YAML_SEQUENCE_START_EVENT:
+	case yaml_SEQUENCE_START_EVENT:
 		accumulate = 2
-	case YAML_MAPPING_START_EVENT:
+	case yaml_MAPPING_START_EVENT:
 		accumulate = 3
 	default:
 		return false
@@ -157,9 +157,9 @@ func yaml_emitter_need_more_events(emitter *yaml_emitter_t) bool {
 	level := 0
 	for i := emitter.events_head; i < len(emitter.events); i++ {
 		switch emitter.events[i].event_type {
-		case YAML_STREAM_START_EVENT, YAML_DOCUMENT_START_EVENT, YAML_SEQUENCE_START_EVENT, YAML_MAPPING_START_EVENT:
+		case yaml_STREAM_START_EVENT, yaml_DOCUMENT_START_EVENT, yaml_SEQUENCE_START_EVENT, yaml_MAPPING_START_EVENT:
 			level++
-		case YAML_STREAM_END_EVENT, YAML_DOCUMENT_END_EVENT, YAML_SEQUENCE_END_EVENT, YAML_MAPPING_END_EVENT:
+		case yaml_STREAM_END_EVENT, yaml_DOCUMENT_END_EVENT, yaml_SEQUENCE_END_EVENT, yaml_MAPPING_END_EVENT:
 			level--
 		}
 
@@ -224,58 +224,58 @@ func yaml_emitter_increase_indent(emitter *yaml_emitter_t, flow bool, indentless
 
 func yaml_emitter_state_machine(emitter *yaml_emitter_t, event *yaml_event_t) bool {
 	switch emitter.state {
-	case YAML_EMIT_STREAM_START_STATE:
+	case yaml_EMIT_STREAM_START_STATE:
 		return yaml_emitter_emit_stream_start(emitter, event)
 
-	case YAML_EMIT_FIRST_DOCUMENT_START_STATE:
+	case yaml_EMIT_FIRST_DOCUMENT_START_STATE:
 		return yaml_emitter_emit_document_start(emitter, event, true)
 
-	case YAML_EMIT_DOCUMENT_START_STATE:
+	case yaml_EMIT_DOCUMENT_START_STATE:
 		return yaml_emitter_emit_document_start(emitter, event, false)
 
-	case YAML_EMIT_DOCUMENT_CONTENT_STATE:
+	case yaml_EMIT_DOCUMENT_CONTENT_STATE:
 		return yaml_emitter_emit_document_content(emitter, event)
 
-	case YAML_EMIT_DOCUMENT_END_STATE:
+	case yaml_EMIT_DOCUMENT_END_STATE:
 		return yaml_emitter_emit_document_end(emitter, event)
 
-	case YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE:
+	case yaml_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE:
 		return yaml_emitter_emit_flow_sequence_item(emitter, event, true)
 
-	case YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE:
+	case yaml_EMIT_FLOW_SEQUENCE_ITEM_STATE:
 		return yaml_emitter_emit_flow_sequence_item(emitter, event, false)
 
-	case YAML_EMIT_FLOW_MAPPING_FIRST_KEY_STATE:
+	case yaml_EMIT_FLOW_MAPPING_FIRST_KEY_STATE:
 		return yaml_emitter_emit_flow_mapping_key(emitter, event, true)
 
-	case YAML_EMIT_FLOW_MAPPING_KEY_STATE:
+	case yaml_EMIT_FLOW_MAPPING_KEY_STATE:
 		return yaml_emitter_emit_flow_mapping_key(emitter, event, false)
 
-	case YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE:
+	case yaml_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE:
 		return yaml_emitter_emit_flow_mapping_value(emitter, event, true)
 
-	case YAML_EMIT_FLOW_MAPPING_VALUE_STATE:
+	case yaml_EMIT_FLOW_MAPPING_VALUE_STATE:
 		return yaml_emitter_emit_flow_mapping_value(emitter, event, false)
 
-	case YAML_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE:
+	case yaml_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE:
 		return yaml_emitter_emit_block_sequence_item(emitter, event, true)
 
-	case YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE:
+	case yaml_EMIT_BLOCK_SEQUENCE_ITEM_STATE:
 		return yaml_emitter_emit_block_sequence_item(emitter, event, false)
 
-	case YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE:
+	case yaml_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE:
 		return yaml_emitter_emit_block_mapping_key(emitter, event, true)
 
-	case YAML_EMIT_BLOCK_MAPPING_KEY_STATE:
+	case yaml_EMIT_BLOCK_MAPPING_KEY_STATE:
 		return yaml_emitter_emit_block_mapping_key(emitter, event, false)
 
-	case YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE:
+	case yaml_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE:
 		return yaml_emitter_emit_block_mapping_value(emitter, event, true)
 
-	case YAML_EMIT_BLOCK_MAPPING_VALUE_STATE:
+	case yaml_EMIT_BLOCK_MAPPING_VALUE_STATE:
 		return yaml_emitter_emit_block_mapping_value(emitter, event, false)
 
-	case YAML_EMIT_END_STATE:
+	case yaml_EMIT_END_STATE:
 		return yaml_emitter_set_emitter_error(emitter,
 			"expected nothing after STREAM-END")
 
@@ -290,16 +290,16 @@ func yaml_emitter_state_machine(emitter *yaml_emitter_t, event *yaml_event_t) bo
 
 func yaml_emitter_emit_stream_start(emitter *yaml_emitter_t, event *yaml_event_t) bool {
 
-	if event.event_type != YAML_STREAM_START_EVENT {
+	if event.event_type != yaml_STREAM_START_EVENT {
 		return yaml_emitter_set_emitter_error(emitter,
 			"expected STREAM-START")
 	}
 
-	if emitter.encoding == YAML_ANY_ENCODING {
+	if emitter.encoding == yaml_ANY_ENCODING {
 		emitter.encoding = event.encoding
 
-		if emitter.encoding == YAML_ANY_ENCODING {
-			emitter.encoding = YAML_UTF8_ENCODING
+		if emitter.encoding == yaml_ANY_ENCODING {
+			emitter.encoding = yaml_UTF8_ENCODING
 		}
 	}
 
@@ -315,8 +315,8 @@ func yaml_emitter_emit_stream_start(emitter *yaml_emitter_t, event *yaml_event_t
 		emitter.best_width = 1<<31 - 1
 	}
 
-	if emitter.line_break == YAML_ANY_BREAK {
-		emitter.line_break = YAML_LN_BREAK
+	if emitter.line_break == yaml_ANY_BREAK {
+		emitter.line_break = yaml_LN_BREAK
 	}
 
 	emitter.indent = -1
@@ -326,13 +326,13 @@ func yaml_emitter_emit_stream_start(emitter *yaml_emitter_t, event *yaml_event_t
 	emitter.whitespace = true
 	emitter.indention = true
 
-	if emitter.encoding != YAML_UTF8_ENCODING {
+	if emitter.encoding != yaml_UTF8_ENCODING {
 		if !yaml_emitter_write_bom(emitter) {
 			return false
 		}
 	}
 
-	emitter.state = YAML_EMIT_FIRST_DOCUMENT_START_STATE
+	emitter.state = yaml_EMIT_FIRST_DOCUMENT_START_STATE
 
 	return true
 }
@@ -344,7 +344,7 @@ func yaml_emitter_emit_stream_start(emitter *yaml_emitter_t, event *yaml_event_t
 func yaml_emitter_emit_document_start(emitter *yaml_emitter_t,
 	event *yaml_event_t, first bool) bool {
 
-	if event.event_type == YAML_DOCUMENT_START_EVENT {
+	if event.event_type == yaml_DOCUMENT_START_EVENT {
 		if event.version_directive != nil {
 			if !yaml_emitter_analyze_version_directive(emitter,
 				*event.version_directive) {
@@ -438,10 +438,10 @@ func yaml_emitter_emit_document_start(emitter *yaml_emitter_t,
 			}
 		}
 
-		emitter.state = YAML_EMIT_DOCUMENT_CONTENT_STATE
+		emitter.state = yaml_EMIT_DOCUMENT_CONTENT_STATE
 
 		return true
-	} else if event.event_type == YAML_STREAM_END_EVENT {
+	} else if event.event_type == yaml_STREAM_END_EVENT {
 		if emitter.open_ended {
 			if !yaml_emitter_write_indicator(emitter, []byte("..."), true, false, false) {
 				return false
@@ -455,7 +455,7 @@ func yaml_emitter_emit_document_start(emitter *yaml_emitter_t,
 			return false
 		}
 
-		emitter.state = YAML_EMIT_END_STATE
+		emitter.state = yaml_EMIT_END_STATE
 
 		return true
 	}
@@ -469,7 +469,7 @@ func yaml_emitter_emit_document_start(emitter *yaml_emitter_t,
  */
 
 func yaml_emitter_emit_document_content(emitter *yaml_emitter_t, event *yaml_event_t) bool {
-	emitter.states = append(emitter.states, YAML_EMIT_DOCUMENT_END_STATE)
+	emitter.states = append(emitter.states, yaml_EMIT_DOCUMENT_END_STATE)
 
 	return yaml_emitter_emit_node(emitter, event, true, false, false, false)
 }
@@ -480,7 +480,7 @@ func yaml_emitter_emit_document_content(emitter *yaml_emitter_t, event *yaml_eve
 
 func yaml_emitter_emit_document_end(emitter *yaml_emitter_t, event *yaml_event_t) bool {
 
-	if event.event_type != YAML_DOCUMENT_END_EVENT {
+	if event.event_type != yaml_DOCUMENT_END_EVENT {
 		return yaml_emitter_set_emitter_error(emitter,
 			"expected DOCUMENT-END")
 	}
@@ -500,7 +500,7 @@ func yaml_emitter_emit_document_end(emitter *yaml_emitter_t, event *yaml_event_t
 		return false
 	}
 
-	emitter.state = YAML_EMIT_DOCUMENT_START_STATE
+	emitter.state = yaml_EMIT_DOCUMENT_START_STATE
 	emitter.tag_directives = emitter.tag_directives[:0]
 	return true
 }
@@ -521,7 +521,7 @@ func yaml_emitter_emit_flow_sequence_item(emitter *yaml_emitter_t, event *yaml_e
 		emitter.flow_level++
 	}
 
-	if event.event_type == YAML_SEQUENCE_END_EVENT {
+	if event.event_type == yaml_SEQUENCE_END_EVENT {
 		emitter.flow_level--
 		emitter.indent = emitter.indents[len(emitter.indents)-1]
 		emitter.indents = emitter.indents[:len(emitter.indents)-1]
@@ -554,7 +554,7 @@ func yaml_emitter_emit_flow_sequence_item(emitter *yaml_emitter_t, event *yaml_e
 		}
 	}
 
-	emitter.states = append(emitter.states, YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE)
+	emitter.states = append(emitter.states, yaml_EMIT_FLOW_SEQUENCE_ITEM_STATE)
 	return yaml_emitter_emit_node(emitter, event, false, true, false, false)
 }
 
@@ -576,7 +576,7 @@ func yaml_emitter_emit_flow_mapping_key(emitter *yaml_emitter_t,
 		emitter.flow_level++
 	}
 
-	if event.event_type == YAML_MAPPING_END_EVENT {
+	if event.event_type == yaml_MAPPING_END_EVENT {
 		emitter.flow_level--
 		emitter.indent = emitter.indents[len(emitter.indents)-1]
 		emitter.indents = emitter.indents[:len(emitter.indents)-1]
@@ -611,14 +611,14 @@ func yaml_emitter_emit_flow_mapping_key(emitter *yaml_emitter_t,
 	}
 
 	if !emitter.canonical && yaml_emitter_check_simple_key(emitter) {
-		emitter.states = append(emitter.states, YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE)
+		emitter.states = append(emitter.states, yaml_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE)
 		return yaml_emitter_emit_node(emitter, event, false, false, true, true)
 	} else {
 		if !yaml_emitter_write_indicator(emitter, []byte("?"), true, false, false) {
 			return false
 		}
 
-		emitter.states = append(emitter.states, YAML_EMIT_FLOW_MAPPING_VALUE_STATE)
+		emitter.states = append(emitter.states, yaml_EMIT_FLOW_MAPPING_VALUE_STATE)
 		return yaml_emitter_emit_node(emitter, event, false, false, true, false)
 	}
 }
@@ -644,7 +644,7 @@ func yaml_emitter_emit_flow_mapping_value(emitter *yaml_emitter_t,
 			return false
 		}
 	}
-	emitter.states = append(emitter.states, YAML_EMIT_FLOW_MAPPING_KEY_STATE)
+	emitter.states = append(emitter.states, yaml_EMIT_FLOW_MAPPING_KEY_STATE)
 	return yaml_emitter_emit_node(emitter, event, false, false, true, false)
 }
 
@@ -662,7 +662,7 @@ func yaml_emitter_emit_block_sequence_item(emitter *yaml_emitter_t,
 		}
 	}
 
-	if event.event_type == YAML_SEQUENCE_END_EVENT {
+	if event.event_type == yaml_SEQUENCE_END_EVENT {
 
 		emitter.indent = emitter.indents[len(emitter.indents)-1]
 		emitter.indents = emitter.indents[:len(emitter.indents)-1]
@@ -680,7 +680,7 @@ func yaml_emitter_emit_block_sequence_item(emitter *yaml_emitter_t,
 		return false
 	}
 
-	emitter.states = append(emitter.states, YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE)
+	emitter.states = append(emitter.states, yaml_EMIT_BLOCK_SEQUENCE_ITEM_STATE)
 	return yaml_emitter_emit_node(emitter, event, false, true, false, false)
 }
 
@@ -697,7 +697,7 @@ func yaml_emitter_emit_block_mapping_key(emitter *yaml_emitter_t,
 		}
 	}
 
-	if event.event_type == YAML_MAPPING_END_EVENT {
+	if event.event_type == yaml_MAPPING_END_EVENT {
 		emitter.indent = emitter.indents[len(emitter.indents)-1]
 		emitter.indents = emitter.indents[:len(emitter.indents)-1]
 
@@ -712,14 +712,14 @@ func yaml_emitter_emit_block_mapping_key(emitter *yaml_emitter_t,
 	}
 
 	if yaml_emitter_check_simple_key(emitter) {
-		emitter.states = append(emitter.states, YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE)
+		emitter.states = append(emitter.states, yaml_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE)
 
 		return yaml_emitter_emit_node(emitter, event, false, false, true, true)
 	} else {
 		if !yaml_emitter_write_indicator(emitter, []byte("?"), true, false, true) {
 			return false
 		}
-		emitter.states = append(emitter.states, YAML_EMIT_BLOCK_MAPPING_VALUE_STATE)
+		emitter.states = append(emitter.states, yaml_EMIT_BLOCK_MAPPING_VALUE_STATE)
 
 		return yaml_emitter_emit_node(emitter, event, false, false, true, false)
 	}
@@ -744,7 +744,7 @@ func yaml_emitter_emit_block_mapping_value(emitter *yaml_emitter_t,
 			return false
 		}
 	}
-	emitter.states = append(emitter.states, YAML_EMIT_BLOCK_MAPPING_KEY_STATE)
+	emitter.states = append(emitter.states, yaml_EMIT_BLOCK_MAPPING_KEY_STATE)
 
 	return yaml_emitter_emit_node(emitter, event, false, false, true, false)
 }
@@ -761,16 +761,16 @@ func yaml_emitter_emit_node(emitter *yaml_emitter_t, event *yaml_event_t,
 	emitter.simple_key_context = simple_key
 
 	switch event.event_type {
-	case YAML_ALIAS_EVENT:
+	case yaml_ALIAS_EVENT:
 		return yaml_emitter_emit_alias(emitter, event)
 
-	case YAML_SCALAR_EVENT:
+	case yaml_SCALAR_EVENT:
 		return yaml_emitter_emit_scalar(emitter, event)
 
-	case YAML_SEQUENCE_START_EVENT:
+	case yaml_SEQUENCE_START_EVENT:
 		return yaml_emitter_emit_sequence_start(emitter, event)
 
-	case YAML_MAPPING_START_EVENT:
+	case yaml_MAPPING_START_EVENT:
 		return yaml_emitter_emit_mapping_start(emitter, event)
 
 	default:
@@ -838,11 +838,11 @@ func yaml_emitter_emit_sequence_start(emitter *yaml_emitter_t, event *yaml_event
 	}
 
 	if emitter.flow_level > 0 || emitter.canonical ||
-		event.style == yaml_style_t(YAML_FLOW_SEQUENCE_STYLE) ||
+		event.style == yaml_style_t(yaml_FLOW_SEQUENCE_STYLE) ||
 		yaml_emitter_check_empty_sequence(emitter) {
-		emitter.state = YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE
+		emitter.state = yaml_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE
 	} else {
-		emitter.state = YAML_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE
+		emitter.state = yaml_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE
 	}
 
 	return true
@@ -861,11 +861,11 @@ func yaml_emitter_emit_mapping_start(emitter *yaml_emitter_t, event *yaml_event_
 	}
 
 	if emitter.flow_level > 0 || emitter.canonical ||
-		event.style == yaml_style_t(YAML_FLOW_MAPPING_STYLE) ||
+		event.style == yaml_style_t(yaml_FLOW_MAPPING_STYLE) ||
 		yaml_emitter_check_empty_mapping(emitter) {
-		emitter.state = YAML_EMIT_FLOW_MAPPING_FIRST_KEY_STATE
+		emitter.state = yaml_EMIT_FLOW_MAPPING_FIRST_KEY_STATE
 	} else {
-		emitter.state = YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE
+		emitter.state = yaml_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE
 	}
 
 	return true
@@ -888,8 +888,8 @@ func yaml_emitter_check_empty_sequence(emitter *yaml_emitter_t) bool {
 		return false
 	}
 
-	return (emitter.events[emitter.events_head].event_type == YAML_SEQUENCE_START_EVENT &&
-		emitter.events[emitter.events_head+1].event_type == YAML_SEQUENCE_END_EVENT)
+	return (emitter.events[emitter.events_head].event_type == yaml_SEQUENCE_START_EVENT &&
+		emitter.events[emitter.events_head+1].event_type == yaml_SEQUENCE_END_EVENT)
 }
 
 /*
@@ -901,8 +901,8 @@ func yaml_emitter_check_empty_mapping(emitter *yaml_emitter_t) bool {
 		return false
 	}
 
-	return (emitter.events[emitter.events_head].event_type == YAML_MAPPING_START_EVENT &&
-		emitter.events[emitter.events_head+1].event_type == YAML_MAPPING_END_EVENT)
+	return (emitter.events[emitter.events_head].event_type == yaml_MAPPING_START_EVENT &&
+		emitter.events[emitter.events_head+1].event_type == yaml_MAPPING_END_EVENT)
 }
 
 /*
@@ -913,10 +913,10 @@ func yaml_emitter_check_simple_key(emitter *yaml_emitter_t) bool {
 	length := 0
 
 	switch emitter.events[emitter.events_head].event_type {
-	case YAML_ALIAS_EVENT:
+	case yaml_ALIAS_EVENT:
 		length += len(emitter.anchor_data.anchor)
 
-	case YAML_SCALAR_EVENT:
+	case yaml_SCALAR_EVENT:
 		if emitter.scalar_data.multiline {
 			return false
 		}
@@ -925,7 +925,7 @@ func yaml_emitter_check_simple_key(emitter *yaml_emitter_t) bool {
 			len(emitter.tag_data.suffix) +
 			len(emitter.scalar_data.value)
 
-	case YAML_SEQUENCE_START_EVENT:
+	case yaml_SEQUENCE_START_EVENT:
 		if !yaml_emitter_check_empty_sequence(emitter) {
 			return false
 		}
@@ -934,7 +934,7 @@ func yaml_emitter_check_simple_key(emitter *yaml_emitter_t) bool {
 			len(emitter.tag_data.handle) +
 			len(emitter.tag_data.suffix)
 
-	case YAML_MAPPING_START_EVENT:
+	case yaml_MAPPING_START_EVENT:
 		if !yaml_emitter_check_empty_mapping(emitter) {
 			return false
 		}
@@ -968,47 +968,47 @@ func yaml_emitter_select_scalar_style(emitter *yaml_emitter_t, event *yaml_event
 
 	style := yaml_scalar_style_t(event.style)
 
-	if style == YAML_ANY_SCALAR_STYLE {
-		style = YAML_PLAIN_SCALAR_STYLE
+	if style == yaml_ANY_SCALAR_STYLE {
+		style = yaml_PLAIN_SCALAR_STYLE
 	}
 
 	if emitter.canonical {
-		style = YAML_DOUBLE_QUOTED_SCALAR_STYLE
+		style = yaml_DOUBLE_QUOTED_SCALAR_STYLE
 	}
 
 	if emitter.simple_key_context && emitter.scalar_data.multiline {
-		style = YAML_DOUBLE_QUOTED_SCALAR_STYLE
+		style = yaml_DOUBLE_QUOTED_SCALAR_STYLE
 	}
 
-	if style == YAML_PLAIN_SCALAR_STYLE {
+	if style == yaml_PLAIN_SCALAR_STYLE {
 		if (emitter.flow_level > 0 && !emitter.scalar_data.flow_plain_allowed) ||
 			(emitter.flow_level == 0 && !emitter.scalar_data.block_plain_allowed) {
-			style = YAML_SINGLE_QUOTED_SCALAR_STYLE
+			style = yaml_SINGLE_QUOTED_SCALAR_STYLE
 		}
 		if len(emitter.scalar_data.value) == 0 &&
 			(emitter.flow_level > 0 || emitter.simple_key_context) {
-			style = YAML_SINGLE_QUOTED_SCALAR_STYLE
+			style = yaml_SINGLE_QUOTED_SCALAR_STYLE
 		}
 		if no_tag && !event.implicit {
-			style = YAML_SINGLE_QUOTED_SCALAR_STYLE
+			style = yaml_SINGLE_QUOTED_SCALAR_STYLE
 		}
 	}
 
-	if style == YAML_SINGLE_QUOTED_SCALAR_STYLE {
+	if style == yaml_SINGLE_QUOTED_SCALAR_STYLE {
 		if !emitter.scalar_data.single_quoted_allowed {
-			style = YAML_DOUBLE_QUOTED_SCALAR_STYLE
+			style = yaml_DOUBLE_QUOTED_SCALAR_STYLE
 		}
 	}
 
-	if style == YAML_LITERAL_SCALAR_STYLE || style == YAML_FOLDED_SCALAR_STYLE {
+	if style == yaml_LITERAL_SCALAR_STYLE || style == yaml_FOLDED_SCALAR_STYLE {
 		if !emitter.scalar_data.block_allowed ||
 			emitter.flow_level > 0 || emitter.simple_key_context {
-			style = YAML_DOUBLE_QUOTED_SCALAR_STYLE
+			style = yaml_DOUBLE_QUOTED_SCALAR_STYLE
 		}
 	}
 
 	if no_tag && !event.quoted_implicit &&
-		style != YAML_PLAIN_SCALAR_STYLE {
+		style != yaml_PLAIN_SCALAR_STYLE {
 		emitter.tag_data.handle = []byte("!")
 	}
 
@@ -1081,26 +1081,26 @@ func yaml_emitter_process_tag(emitter *yaml_emitter_t) bool {
 
 func yaml_emitter_process_scalar(emitter *yaml_emitter_t) bool {
 	switch emitter.scalar_data.style {
-	case YAML_PLAIN_SCALAR_STYLE:
+	case yaml_PLAIN_SCALAR_STYLE:
 		return yaml_emitter_write_plain_scalar(emitter,
 			emitter.scalar_data.value,
 			!emitter.simple_key_context)
 
-	case YAML_SINGLE_QUOTED_SCALAR_STYLE:
+	case yaml_SINGLE_QUOTED_SCALAR_STYLE:
 		return yaml_emitter_write_single_quoted_scalar(emitter,
 			emitter.scalar_data.value,
 			!emitter.simple_key_context)
 
-	case YAML_DOUBLE_QUOTED_SCALAR_STYLE:
+	case yaml_DOUBLE_QUOTED_SCALAR_STYLE:
 		return yaml_emitter_write_double_quoted_scalar(emitter,
 			emitter.scalar_data.value,
 			!emitter.simple_key_context)
 
-	case YAML_LITERAL_SCALAR_STYLE:
+	case yaml_LITERAL_SCALAR_STYLE:
 		return yaml_emitter_write_literal_scalar(emitter,
 			emitter.scalar_data.value)
 
-	case YAML_FOLDED_SCALAR_STYLE:
+	case yaml_FOLDED_SCALAR_STYLE:
 		return yaml_emitter_write_folded_scalar(emitter,
 			emitter.scalar_data.value)
 
@@ -1394,13 +1394,13 @@ func yaml_emitter_analyze_event(emitter *yaml_emitter_t, event *yaml_event_t) bo
 	emitter.scalar_data.value = nil
 
 	switch event.event_type {
-	case YAML_ALIAS_EVENT:
+	case yaml_ALIAS_EVENT:
 		if !yaml_emitter_analyze_anchor(emitter,
 			event.anchor, true) {
 			return false
 		}
 
-	case YAML_SCALAR_EVENT:
+	case yaml_SCALAR_EVENT:
 		if len(event.anchor) > 0 {
 			if !yaml_emitter_analyze_anchor(emitter,
 				event.anchor, false) {
@@ -1417,7 +1417,7 @@ func yaml_emitter_analyze_event(emitter *yaml_emitter_t, event *yaml_event_t) bo
 		if !yaml_emitter_analyze_scalar(emitter, event.value) {
 			return false
 		}
-	case YAML_SEQUENCE_START_EVENT:
+	case yaml_SEQUENCE_START_EVENT:
 		if len(event.anchor) > 0 {
 			if !yaml_emitter_analyze_anchor(emitter,
 				event.anchor, false) {
@@ -1431,7 +1431,7 @@ func yaml_emitter_analyze_event(emitter *yaml_emitter_t, event *yaml_event_t) bo
 				return false
 			}
 		}
-	case YAML_MAPPING_START_EVENT:
+	case yaml_MAPPING_START_EVENT:
 		if len(event.anchor) > 0 {
 			if !yaml_emitter_analyze_anchor(emitter,
 				event.anchor, false) {

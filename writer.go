@@ -5,7 +5,7 @@ package candiedyaml
  */
 
 func yaml_emitter_set_writer_error(emitter *yaml_emitter_t, problem string) bool {
-	emitter.error = YAML_WRITER_ERROR
+	emitter.error = yaml_WRITER_ERROR
 	emitter.problem = problem
 
 	return false
@@ -19,7 +19,7 @@ func yaml_emitter_flush(emitter *yaml_emitter_t) bool {
 	if emitter.write_handler == nil {
 		panic("Write handler must be set") /* Write handler must be set. */
 	}
-	if emitter.encoding == YAML_ANY_ENCODING {
+	if emitter.encoding == yaml_ANY_ENCODING {
 		panic("Encoding must be set") /* Output encoding must be set. */
 	}
 
@@ -31,7 +31,7 @@ func yaml_emitter_flush(emitter *yaml_emitter_t) bool {
 
 	/* If the output encoding is UTF-8, we don't need to recode the buffer. */
 
-	if emitter.encoding == YAML_UTF8_ENCODING {
+	if emitter.encoding == yaml_UTF8_ENCODING {
 		if err := emitter.write_handler(emitter,
 			emitter.buffer[:emitter.buffer_pos]); err != nil {
 			return yaml_emitter_set_writer_error(emitter, "write error: "+err.Error())
@@ -43,7 +43,7 @@ func yaml_emitter_flush(emitter *yaml_emitter_t) bool {
 	/* Recode the buffer into the raw buffer. */
 
 	var low, high int
-	if emitter.encoding == YAML_UTF16LE_ENCODING {
+	if emitter.encoding == yaml_UTF16LE_ENCODING {
 		low, high = 0, 1
 	} else {
 		high, low = 1, 0

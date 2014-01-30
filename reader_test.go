@@ -119,9 +119,9 @@ var _ = Describe("Reader", func() {
 					// 	outcome = '-'
 					// }
 					// fmt.Printf("\t\t %c %s", outcome, tc.title)
-					// if parser.error == YAML_NO_ERROR {
+					// if parser.error == yaml_NO_ERROR {
 					// 	fmt.Printf("(no error)\n")
-					// } else if parser.error == YAML_READER_ERROR {
+					// } else if parser.error == yaml_READER_ERROR {
 					// 	if parser.problem_value != -1 {
 					// 		fmt.Printf("(reader error: %s: #%X at %d)\n",
 					// 			parser.problem, parser.problem_value, parser.problem_offset)
