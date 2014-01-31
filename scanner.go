@@ -995,7 +995,7 @@ func yaml_parser_save_simple_key(parser *yaml_parser_t) bool {
  */
 
 func yaml_parser_remove_simple_key(parser *yaml_parser_t) bool {
-	simple_key := parser.simple_keys[len(parser.simple_keys)-1]
+	simple_key := &parser.simple_keys[len(parser.simple_keys)-1]
 
 	if simple_key.possible {
 		/* If the key is required, it is an error. */
@@ -1503,6 +1503,7 @@ func yaml_parser_fetch_key(parser *yaml_parser_t) bool {
  */
 
 func yaml_parser_fetch_value(parser *yaml_parser_t) bool {
+
 	simple_key := &parser.simple_keys[len(parser.simple_keys)-1]
 
 	/* Have we found a simple key? */

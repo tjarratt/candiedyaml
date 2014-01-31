@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 )
 
-var parses = func(filename string) {
-	It("parses "+filename, func() {
+var scan = func(filename string) {
+	It("scan "+filename, func() {
 		file, err := os.Open(filename)
 		Ω(err).To(BeNil())
 
@@ -18,16 +18,15 @@ var parses = func(filename string) {
 		yaml_parser_set_input_file(&parser, file)
 
 		failed := false
-		event := yaml_event_t{}
+		token := yaml_token_t{}
 
 		for {
-			if !yaml_parser_parse(&parser, &event) {
+			if !yaml_parser_scan(&parser, &token) {
 				failed = true
-				println("---", parser.error, parser.problem, parser.context, "line", parser.problem_mark.line, "col", parser.problem_mark.column)
 				break
 			}
 
-			if event.event_type == yaml_STREAM_END_EVENT {
+			if token.token_type == yaml_STREAM_END_TOKEN {
 				break
 			}
 		}
@@ -47,17 +46,17 @@ var parses = func(filename string) {
 	})
 }
 
-var parseYamls = func(dirname string) {
+var scanYamls = func(dirname string) {
 	fileInfos, err := ioutil.ReadDir(dirname)
 	Ω(err).To(BeNil())
 	for _, fileInfo := range fileInfos {
 		if !fileInfo.IsDir() {
-			parses(filepath.Join(dirname, fileInfo.Name()))
+			scan(filepath.Join(dirname, fileInfo.Name()))
 		}
 	}
 }
 
-var _ = Describe("Parser", func() {
-	parseYamls("fixtures/specification")
-	parseYamls("fixtures/specification/types")
+var _ = Describe("Scanner", func() {
+	scanYamls("fixtures/specification")
+	scanYamls("fixtures/specification/types")
 })

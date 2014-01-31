@@ -427,7 +427,7 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 	} else {
 		start_mark, end_mark := token.start_mark, token.start_mark
 
-		var tag_handle *[]byte
+		var tag_handle []byte
 		var tag_suffix, anchor []byte
 		var tag_mark yaml_mark_t
 		if token.token_type == yaml_ANCHOR_TOKEN {
@@ -440,7 +440,7 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 				return false
 			}
 			if token.token_type == yaml_TAG_TOKEN {
-				*tag_handle = token.value
+				tag_handle = token.value
 				tag_suffix = token.suffix
 				tag_mark = token.start_mark
 				end_mark = token.end_mark
@@ -451,7 +451,7 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 				}
 			}
 		} else if token.token_type == yaml_TAG_TOKEN {
-			*tag_handle = token.value
+			tag_handle = token.value
 			tag_suffix = token.suffix
 			start_mark, tag_mark = token.start_mark, token.start_mark
 			end_mark = token.end_mark
@@ -474,14 +474,14 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 
 		var tag []byte
 		if tag_handle != nil {
-			if len(*tag_handle) == 0 {
+			if len(tag_handle) == 0 {
 				tag = tag_suffix
 				tag_handle = nil
 				tag_suffix = nil
 			} else {
 				for i := range parser.tag_directives {
 					tag_directive := &parser.tag_directives[i]
-					if bytes.Equal(tag_directive.handle, *tag_handle) {
+					if bytes.Equal(tag_directive.handle, tag_handle) {
 						tag = append([]byte(nil), tag_directive.prefix...)
 						tag = append(tag, tag_suffix...)
 						tag_handle = nil

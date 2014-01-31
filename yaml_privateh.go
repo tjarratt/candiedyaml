@@ -225,7 +225,7 @@ func insert_token(parser *yaml_parser_t, pos int, token *yaml_token_t) {
 		return
 	}
 	copy(parser.tokens[parser.tokens_head+pos+1:], parser.tokens[parser.tokens_head+pos:])
-	parser.tokens[pos] = *token
+	parser.tokens[parser.tokens_head+pos] = *token
 }
 
 // /*
