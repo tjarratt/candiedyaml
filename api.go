@@ -44,7 +44,7 @@ func yaml_string_read_handler(parser *yaml_parser_t, buffer []byte) (int, error)
  */
 
 func yaml_file_read_handler(parser *yaml_parser_t, buffer []byte) (int, error) {
-	return parser.input_file.Read(buffer)
+	return parser.input_reader.Read(buffer)
 }
 
 /*
@@ -63,16 +63,15 @@ func yaml_parser_set_input_string(parser *yaml_parser_t, input []byte) {
 }
 
 /*
- * Set a file input.
+ * Set a reader input
  */
-
-func yaml_parser_set_input_file(parser *yaml_parser_t, file *os.File) {
+func yaml_parser_set_input_reader(parser *yaml_parser_t, reader io.Reader) {
 	if parser.read_handler != nil {
 		panic("input already set")
 	}
 
 	parser.read_handler = yaml_file_read_handler
-	parser.input_file = file
+	parser.input_reader = reader
 }
 
 /*
@@ -485,7 +484,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //
 // {
 //     struct {
-//         yaml_error_type_t error;
+//         YAML_error_type_t error;
 //     } context;
 //     struct {
 //         yaml_node_t *start;
@@ -499,7 +498,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //         yaml_tag_directive_t *top;
 //     } tag_directives_copy = { NULL, NULL, NULL };
 //     yaml_tag_directive_t value = { NULL, NULL };
-//     yaml_mark_t mark = { 0, 0, 0 };
+//     YAML_mark_t mark = { 0, 0, 0 };
 //
 //     assert(document);       /* Non-NULL document object is expected. */
 //     assert((tag_directives_start && tag_directives_end) ||
@@ -568,7 +567,7 @@ func yaml_event_delete(event *yaml_event_t) {
 // yaml_document_delete(document *yaml_document_t)
 // {
 //     struct {
-//         yaml_error_type_t error;
+//         YAML_error_type_t error;
 //     } context;
 //     yaml_tag_directive_t *tag_directive;
 //
@@ -647,9 +646,9 @@ func yaml_event_delete(event *yaml_event_t) {
 //         yaml_scalar_style_t style)
 // {
 //     struct {
-//         yaml_error_type_t error;
+//         YAML_error_type_t error;
 //     } context;
-//     yaml_mark_t mark = { 0, 0, 0 };
+//     YAML_mark_t mark = { 0, 0, 0 };
 //     yaml_char_t *tag_copy = NULL;
 //     yaml_char_t *value_copy = NULL;
 //     yaml_node_t node;
@@ -696,9 +695,9 @@ func yaml_event_delete(event *yaml_event_t) {
 //         yaml_char_t *tag, yaml_sequence_style_t style)
 // {
 //     struct {
-//         yaml_error_type_t error;
+//         YAML_error_type_t error;
 //     } context;
-//     yaml_mark_t mark = { 0, 0, 0 };
+//     YAML_mark_t mark = { 0, 0, 0 };
 //     yaml_char_t *tag_copy = NULL;
 //     struct {
 //         yaml_node_item_t *start;
@@ -741,9 +740,9 @@ func yaml_event_delete(event *yaml_event_t) {
 //         yaml_char_t *tag, yaml_mapping_style_t style)
 // {
 //     struct {
-//         yaml_error_type_t error;
+//         YAML_error_type_t error;
 //     } context;
-//     yaml_mark_t mark = { 0, 0, 0 };
+//     YAML_mark_t mark = { 0, 0, 0 };
 //     yaml_char_t *tag_copy = NULL;
 //     struct {
 //         yaml_node_pair_t *start;
@@ -786,7 +785,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //         int sequence, int item)
 // {
 //     struct {
-//         yaml_error_type_t error;
+//         YAML_error_type_t error;
 //     } context;
 //
 //     assert(document);       /* Non-NULL document is required. */
@@ -814,7 +813,7 @@ func yaml_event_delete(event *yaml_event_t) {
 //         int mapping, int key, int value)
 // {
 //     struct {
-//         yaml_error_type_t error;
+//         YAML_error_type_t error;
 //     } context;
 //
 //     yaml_node_pair_t pair;

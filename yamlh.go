@@ -41,11 +41,11 @@ const (
 )
 
 /** Many bad things could happen with the parser and emitter. */
-type yaml_error_type_t int
+type YAML_error_type_t int
 
 const (
 	/** No error is produced. */
-	yaml_NO_ERROR yaml_error_type_t = iota
+	yaml_NO_ERROR YAML_error_type_t = iota
 
 	/** Cannot allocate or reallocate a block of memory. */
 	yaml_MEMORY_ERROR
@@ -66,7 +66,7 @@ const (
 )
 
 /** The pointer position. */
-type yaml_mark_t struct {
+type YAML_mark_t struct {
 	/** The position index. */
 	index int
 
@@ -227,10 +227,10 @@ type yaml_token_t struct {
 	prefix []byte
 
 	/** The beginning of the token. */
-	start_mark yaml_mark_t
+	start_mark YAML_mark_t
 	/** The end of the token. */
-	end_mark yaml_mark_t
-	
+	end_mark YAML_mark_t
+
 	major, minor int
 }
 
@@ -312,7 +312,7 @@ type yaml_event_t struct {
 	style yaml_style_t
 
 	/** The beginning of the event. */
-	start_mark, end_mark yaml_mark_t
+	start_mark, end_mark YAML_mark_t
 }
 
 /**
@@ -407,9 +407,9 @@ type yaml_node_t struct {
 	}
 
 	/** The beginning of the node. */
-	start_mark yaml_mark_t
+	start_mark YAML_mark_t
 	/** The end of the node. */
-	end_mark yaml_mark_t
+	end_mark YAML_mark_t
 }
 
 /** The document structure. */
@@ -430,9 +430,9 @@ type yaml_document_t struct {
 	end_implicit bool
 
 	/** The beginning of the document. */
-	start_mark yaml_mark_t
+	start_mark YAML_mark_t
 	/** The end of the document. */
-	end_mark yaml_mark_t
+	end_mark YAML_mark_t
 }
 
 /**
@@ -470,7 +470,7 @@ type yaml_simple_key_t struct {
 	token_number int
 
 	/** The position mark. */
-	mark yaml_mark_t
+	mark YAML_mark_t
 }
 
 /**
@@ -539,7 +539,7 @@ type yaml_alias_data_t struct {
 	/** The node id. */
 	index int
 	/** The anchor mark. */
-	mark yaml_mark_t
+	mark YAML_mark_t
 }
 
 /**
@@ -557,7 +557,7 @@ type yaml_parser_t struct {
 	 */
 
 	/** Error type. */
-	error yaml_error_type_t
+	error YAML_error_type_t
 	/** Error description. */
 	problem string
 	/** The byte about which the problem occured. */
@@ -565,11 +565,11 @@ type yaml_parser_t struct {
 	/** The problematic value (@c -1 is none). */
 	problem_value int
 	/** The problem position. */
-	problem_mark yaml_mark_t
+	problem_mark YAML_mark_t
 	/** The error context. */
 	context string
 	/** The context position. */
-	context_mark yaml_mark_t
+	context_mark YAML_mark_t
 
 	/**
 	 * @}
@@ -583,10 +583,10 @@ type yaml_parser_t struct {
 	/** Read handler. */
 	read_handler yaml_read_handler_t
 
-	/** File input data. */
-	input_file io.Reader
-	input      []byte
-	input_pos  int
+	/** Reader input data. */
+	input_reader io.Reader
+	input        []byte
+	input_pos    int
 
 	/** EOF flag */
 	eof bool
@@ -609,7 +609,7 @@ type yaml_parser_t struct {
 	offset int
 
 	/** The mark of the current position. */
-	mark yaml_mark_t
+	mark YAML_mark_t
 
 	/**
 	 * @}
@@ -667,7 +667,7 @@ type yaml_parser_t struct {
 	state yaml_parser_state_t
 
 	/** The stack of marks. */
-	marks []yaml_mark_t
+	marks []YAML_mark_t
 
 	/** The list of TAG directives. */
 	tag_directives []yaml_tag_directive_t
@@ -768,7 +768,7 @@ type yaml_emitter_t struct {
 	 */
 
 	/** Error type. */
-	error yaml_error_type_t
+	error YAML_error_type_t
 	/** Error description. */
 	problem string
 

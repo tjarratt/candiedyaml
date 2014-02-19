@@ -621,7 +621,7 @@ func yaml_parser_scan(parser *yaml_parser_t, token *yaml_token_t) bool {
  */
 
 func yaml_parser_set_scanner_error(parser *yaml_parser_t, context string,
-	context_mark yaml_mark_t, problem string) bool {
+	context_mark YAML_mark_t, problem string) bool {
 	parser.error = yaml_SCANNER_ERROR
 	parser.context = context
 	parser.context_mark = context_mark
@@ -631,7 +631,7 @@ func yaml_parser_set_scanner_error(parser *yaml_parser_t, context string,
 	return false
 }
 
-func yaml_parser_set_scanner_tag_error(parser *yaml_parser_t, directive bool, context_mark yaml_mark_t, problem string) bool {
+func yaml_parser_set_scanner_tag_error(parser *yaml_parser_t, directive bool, context_mark YAML_mark_t, problem string) bool {
 	context := "while parsing a %TAG directive"
 	if directive {
 		context = "while parsing a tag"
@@ -1051,7 +1051,7 @@ func yaml_parser_decrease_flow_level(parser *yaml_parser_t) bool {
  */
 
 func yaml_parser_roll_indent(parser *yaml_parser_t, column int,
-	number int, token_type yaml_token_type_t, mark yaml_mark_t) bool {
+	number int, token_type yaml_token_type_t, mark YAML_mark_t) bool {
 	/* In the flow context, do nothing. */
 
 	if parser.flow_level > 0 {
@@ -1911,7 +1911,7 @@ func yaml_parser_scan_directive(parser *yaml_parser_t, token *yaml_token_t) bool
  */
 
 func yaml_parser_scan_directive_name(parser *yaml_parser_t,
-	start_mark yaml_mark_t, name *[]byte) bool {
+	start_mark YAML_mark_t, name *[]byte) bool {
 
 	/* Consume the directive name. */
 
@@ -1957,7 +1957,7 @@ func yaml_parser_scan_directive_name(parser *yaml_parser_t,
  */
 
 func yaml_parser_scan_version_directive_value(parser *yaml_parser_t,
-	start_mark yaml_mark_t, major *int, minor *int) bool {
+	start_mark YAML_mark_t, major *int, minor *int) bool {
 	/* Eat whitespaces. */
 
 	if !cache(parser, 1) {
@@ -2008,7 +2008,7 @@ const MAX_NUMBER_LENGTH = 9
  */
 
 func yaml_parser_scan_version_directive_number(parser *yaml_parser_t,
-	start_mark yaml_mark_t, number *int) bool {
+	start_mark YAML_mark_t, number *int) bool {
 
 	/* Repeat while the next character is digit. */
 
@@ -2057,7 +2057,7 @@ func yaml_parser_scan_version_directive_number(parser *yaml_parser_t,
  */
 
 func yaml_parser_scan_tag_directive_value(parser *yaml_parser_t,
-	start_mark yaml_mark_t, handle, prefix *[]byte) bool {
+	start_mark YAML_mark_t, handle, prefix *[]byte) bool {
 
 	/* Eat whitespaces. */
 
@@ -2291,7 +2291,7 @@ func yaml_parser_scan_tag(parser *yaml_parser_t, token *yaml_token_t) bool {
  */
 
 func yaml_parser_scan_tag_handle(parser *yaml_parser_t, directive bool,
-	start_mark yaml_mark_t, handle *[]byte) bool {
+	start_mark YAML_mark_t, handle *[]byte) bool {
 
 	/* Check the initial '!' character. */
 
@@ -2350,7 +2350,7 @@ func yaml_parser_scan_tag_handle(parser *yaml_parser_t, directive bool,
  */
 
 func yaml_parser_scan_tag_uri(parser *yaml_parser_t, directive bool,
-	head []byte, start_mark yaml_mark_t, uri *[]byte) bool {
+	head []byte, start_mark YAML_mark_t, uri *[]byte) bool {
 
 	var s []byte
 	/*
@@ -2422,7 +2422,7 @@ func yaml_parser_scan_tag_uri(parser *yaml_parser_t, directive bool,
  */
 
 func yaml_parser_scan_uri_escapes(parser *yaml_parser_t, directive bool,
-	start_mark yaml_mark_t, s *[]byte) bool {
+	start_mark YAML_mark_t, s *[]byte) bool {
 
 	/* Decode the required number of characters. */
 	w := 10
@@ -2713,7 +2713,7 @@ func yaml_parser_scan_block_scalar(parser *yaml_parser_t, token *yaml_token_t,
 
 func yaml_parser_scan_block_scalar_breaks(parser *yaml_parser_t,
 	indent *int, breaks *[]byte,
-	start_mark yaml_mark_t, end_mark *yaml_mark_t) bool {
+	start_mark YAML_mark_t, end_mark *YAML_mark_t) bool {
 
 	*end_mark = parser.mark
 

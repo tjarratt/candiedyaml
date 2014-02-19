@@ -89,7 +89,7 @@ func yaml_parser_parse(parser *yaml_parser_t, event *yaml_event_t) bool {
  */
 
 func yaml_parser_set_parser_error(parser *yaml_parser_t,
-	problem string, problem_mark yaml_mark_t) bool {
+	problem string, problem_mark YAML_mark_t) bool {
 	parser.error = yaml_PARSER_ERROR
 	parser.problem = problem
 	parser.problem_mark = problem_mark
@@ -98,8 +98,8 @@ func yaml_parser_set_parser_error(parser *yaml_parser_t,
 }
 
 func yaml_parser_set_parser_error_context(parser *yaml_parser_t,
-	context string, context_mark yaml_mark_t,
-	problem string, problem_mark yaml_mark_t) bool {
+	context string, context_mark YAML_mark_t,
+	problem string, problem_mark YAML_mark_t) bool {
 	parser.error = yaml_PARSER_ERROR
 	parser.context = context
 	parser.context_mark = context_mark
@@ -429,7 +429,7 @@ func yaml_parser_parse_node(parser *yaml_parser_t, event *yaml_event_t,
 
 		var tag_handle []byte
 		var tag_suffix, anchor []byte
-		var tag_mark yaml_mark_t
+		var tag_mark YAML_mark_t
 		if token.token_type == yaml_ANCHOR_TOKEN {
 			anchor = token.value
 			start_mark = token.start_mark
@@ -1112,7 +1112,7 @@ func yaml_parser_parse_flow_mapping_value(parser *yaml_parser_t,
  */
 
 func yaml_parser_process_empty_scalar(parser *yaml_parser_t, event *yaml_event_t,
-	mark yaml_mark_t) bool {
+	mark YAML_mark_t) bool {
 	*event = yaml_event_t{
 		event_type: yaml_SCALAR_EVENT,
 		start_mark: mark,
@@ -1200,7 +1200,7 @@ func yaml_parser_process_directives(parser *yaml_parser_t,
  */
 
 func yaml_parser_append_tag_directive(parser *yaml_parser_t,
-	value yaml_tag_directive_t, allow_duplicates bool, mark yaml_mark_t) bool {
+	value yaml_tag_directive_t, allow_duplicates bool, mark YAML_mark_t) bool {
 	for i := range parser.tag_directives {
 		tag := &parser.tag_directives[i]
 		if bytes.Equal(value.handle, tag.handle) {

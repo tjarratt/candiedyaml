@@ -15,7 +15,7 @@ var parses = func(filename string) {
 
 		parser := yaml_parser_t{}
 		yaml_parser_initialize(&parser)
-		yaml_parser_set_input_file(&parser, file)
+		yaml_parser_set_input_reader(&parser, file)
 
 		failed := false
 		event := yaml_event_t{}

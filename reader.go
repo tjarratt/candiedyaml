@@ -161,7 +161,7 @@ func yaml_parser_update_buffer(parser *yaml_parser_t, length int) bool {
 
 		if !first || parser.raw_buffer_pos == len(parser.raw_buffer) {
 			if !yaml_parser_update_raw_buffer(parser) {
-				parser.buffer = parser.buffer[:buffer_end]		
+				parser.buffer = parser.buffer[:buffer_end]
 				return false
 			}
 		}
