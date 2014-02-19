@@ -59,7 +59,7 @@ var _ = Describe("Decode", func() {
 
 			err := d.Decode(&v)
 			Ω(err).ShouldNot(HaveOccurred())
-			Ω(v).To(Equal(map[string][]string{}))
+			Ω(v).To(Equal(map[string][]string{"hr": []string{"Mark McGwire", "Sammy Sosa"}, "rbi": []string{"Sammy Sosa", "Ken Griffey"}}))
 		})
 
 	})
