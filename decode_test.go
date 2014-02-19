@@ -51,6 +51,17 @@ var _ = Describe("Decode", func() {
 				"rbi": int64(147),
 			}))
 		})
+
+		It("Decodes to a map of string arrays", func() {
+			f, _ := os.Open("fixtures/specification/example2_9.yaml")
+			d := NewDecoder(f)
+			v := make(map[string][]string)
+
+			err := d.Decode(&v)
+			Ω(err).ShouldNot(HaveOccurred())
+			Ω(v).To(Equal(map[string][]string{}))
+		})
+
 	})
 
 	Context("Sequence of Maps", func() {

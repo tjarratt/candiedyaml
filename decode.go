@@ -260,15 +260,46 @@ func (d *Decoder) mapping(v reflect.Value) {
 	}
 
 	// Check type of target: struct or map[X]Y
-	switch v.Kind() {
-	case reflect.Map:
-	case reflect.Struct:
 
+	switch v.Kind() {
+	case reflect.Struct:
+		d.mappingStruct(v)
+		return
+	case reflect.Map:
 	default:
 		d.error(errors.New("mapping: invalid type: " + v.Type().String()))
 	}
 
-	panic("NOT COMPLETE")
+	mapt := v.Type()
+	if v.IsNil() {
+		v.Set(reflect.MakeMap(mapt))
+	}
+
+	d.nextEvent()
+
+	keyt := mapt.Key()
+	valuet := mapt.Elem()
+
+	for {
+
+		if d.event.event_type == yaml_MAPPING_END_EVENT {
+			break
+		}
+
+		key := reflect.New(keyt)
+		d.parse(key.Elem())
+		
+		value := reflect.New(valuet)
+		d.parse(value.Elem())
+		
+		v.SetMapIndex(key, value)
+	}
+
+	d.nextEvent()
+}
+
+func (d *Decoder) mappingStruct(v reflect.Value) {
+	panic("NOT IMPLEMENTED")
 }
 
 func (d *Decoder) scalar(v reflect.Value) {
