@@ -1058,7 +1058,7 @@ func yaml_parser_roll_indent(parser *yaml_parser_t, column int,
 		return true
 	}
 
-	if parser.indent < column {
+	if parser.indent == -1 || parser.indent < column {
 		/*
 		 * Push the current indentation level to the stack and set the new
 		 * indentation level.
@@ -1097,6 +1097,16 @@ func yaml_parser_unroll_indent(parser *yaml_parser_t, column int) bool {
 		return true
 	}
 
+	/*
+	 * column is unsigned and parser->indent is signed, so if
+	 * parser->indent is less than zero the conditional in the while
+	 * loop below is incorrect.  Guard against that.
+	 */
+
+	if parser.indent < 0 {
+		return true
+	}
+
 	/* Loop through the intendation levels in the stack. */
 
 	for parser.indent > column {
@@ -1112,6 +1122,39 @@ func yaml_parser_unroll_indent(parser *yaml_parser_t, column int) bool {
 		parser.indent = parser.indents[len(parser.indents)-1]
 		parser.indents = parser.indents[:len(parser.indents)-1]
 
+	}
+
+	return true
+}
+
+/*
+ * Pop indentation levels from the indents stack until the current
+ * level resets to -1.  For each intendation level, append the
+ * BLOCK-END token.
+ */
+
+func yaml_parser_reset_indent(parser *yaml_parser_t) bool {
+	/* In the flow context, do nothing. */
+
+	if parser.flow_level > 0 {
+		return true
+	}
+
+	/* Loop through the intendation levels in the stack. */
+
+	for parser.indent > -1 {
+		/* Create a token and append it to the queue. */
+
+		token := yaml_token_t{
+			token_type: yaml_BLOCK_END_TOKEN,
+			start_mark: parser.mark,
+			end_mark:   parser.mark,
+		}
+		insert_token(parser, -1, &token)
+
+		/* Pop the indentation level. */
+		parser.indent = parser.indents[len(parser.indents)-1]
+		parser.indents = parser.indents[:len(parser.indents)-1]
 	}
 
 	return true
@@ -1163,7 +1206,7 @@ func yaml_parser_fetch_stream_end(parser *yaml_parser_t) bool {
 
 	/* Reset the indentation level. */
 
-	if !yaml_parser_unroll_indent(parser, -1) {
+	if !yaml_parser_reset_indent(parser) {
 		return false
 	}
 
@@ -1194,7 +1237,7 @@ func yaml_parser_fetch_stream_end(parser *yaml_parser_t) bool {
 func yaml_parser_fetch_directive(parser *yaml_parser_t) bool {
 	/* Reset the indentation level. */
 
-	if !yaml_parser_unroll_indent(parser, -1) {
+	if !yaml_parser_reset_indent(parser) {
 		return false
 	}
 
@@ -1227,7 +1270,7 @@ func yaml_parser_fetch_document_indicator(parser *yaml_parser_t,
 
 	/* Reset the indentation level. */
 
-	if !yaml_parser_unroll_indent(parser, -1) {
+	if !yaml_parser_reset_indent(parser) {
 		return false
 	}
 
