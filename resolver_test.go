@@ -28,7 +28,7 @@ var _ = Describe("Resolver", func() {
 
 		BeforeEach(func() {
 			event.implicit = true
-		})		
+		})
 
 		Context("String", func() {
 			It("resolves a string", func() {
@@ -515,7 +515,7 @@ var _ = Describe("Resolver", func() {
 				})
 			})
 		})
-		
+
 		It("fails to resolve a pointer", func() {
 			aString := ""
 			pString := &aString
@@ -525,6 +525,6 @@ var _ = Describe("Resolver", func() {
 			err := resolve(event, v.Elem())
 			Ω(err).Should(HaveOccurred())
 		})
-		
+
 	})
 })

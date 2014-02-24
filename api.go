@@ -2,7 +2,6 @@ package candiedyaml
 
 import (
 	"io"
-	"os"
 )
 
 /*
@@ -102,15 +101,13 @@ func yaml_parser_set_encoding(parser *yaml_parser_t, encoding yaml_encoding_t) {
  * Create a new emitter object.
  */
 
-func yaml_emitter_initialize(emitter *yaml_emitter_t) bool {
+func yaml_emitter_initialize(emitter *yaml_emitter_t) {
 	*emitter = yaml_emitter_t{
 		buffer:     make([]byte, OUTPUT_BUFFER_SIZE),
 		raw_buffer: make([]byte, 0, OUTPUT_RAW_BUFFER_SIZE),
 		states:     make([]yaml_emitter_state_t, 0, INITIAL_STACK_SIZE),
 		events:     make([]yaml_event_t, 0, INITIAL_QUEUE_SIZE),
 	}
-
-	return true
 }
 
 func yaml_emitter_delete(emitter *yaml_emitter_t) {
@@ -130,8 +127,8 @@ func yaml_string_write_handler(emitter *yaml_emitter_t, buffer []byte) error {
  * File write handler.
  */
 
-func yaml_file_write_handler(emitter *yaml_emitter_t, buffer []byte) error {
-	_, err := emitter.output_file.Write(buffer)
+func yaml_writer_write_handler(emitter *yaml_emitter_t, buffer []byte) error {
+	_, err := emitter.output_writer.Write(buffer)
 	return err
 }
 
@@ -152,13 +149,13 @@ func yaml_emitter_set_output_string(emitter *yaml_emitter_t, buffer *[]byte) {
  * Set a file output.
  */
 
-func yaml_emitter_set_output_file(emitter *yaml_emitter_t, file *os.File) {
+func yaml_emitter_set_output_writer(emitter *yaml_emitter_t, w io.Writer) {
 	if emitter.write_handler != nil {
 		panic("output already set")
 	}
 
-	emitter.write_handler = yaml_file_write_handler
-	emitter.output_file = file
+	emitter.write_handler = yaml_writer_write_handler
+	emitter.output_writer = w
 }
 
 /*
@@ -320,23 +317,21 @@ func yaml_emitter_set_break(emitter *yaml_emitter_t, line_break yaml_break_t) {
  * Create STREAM-START.
  */
 
-func yaml_stream_start_event_initialize(event *yaml_event_t, encoding yaml_encoding_t) bool {
+func yaml_stream_start_event_initialize(event *yaml_event_t, encoding yaml_encoding_t) {
 	*event = yaml_event_t{
 		event_type: yaml_STREAM_START_EVENT,
 		encoding:   encoding,
 	}
-	return true
 }
 
 /*
  * Create STREAM-END.
  */
 
-func yaml_stream_end_event_initialize(event *yaml_event_t) bool {
+func yaml_stream_end_event_initialize(event *yaml_event_t) {
 	*event = yaml_event_t{
 		event_type: yaml_STREAM_END_EVENT,
 	}
-	return true
 }
 
 /*
@@ -346,41 +341,35 @@ func yaml_stream_end_event_initialize(event *yaml_event_t) bool {
 func yaml_document_start_event_initialize(event *yaml_event_t,
 	version_directive *yaml_version_directive_t,
 	tag_directives []yaml_tag_directive_t,
-	implicit bool) bool {
+	implicit bool) {
 	*event = yaml_event_t{
 		event_type:        yaml_DOCUMENT_START_EVENT,
 		version_directive: version_directive,
 		tag_directives:    tag_directives,
 		implicit:          implicit,
 	}
-
-	return true
 }
 
 /*
  * Create DOCUMENT-END.
  */
 
-func yaml_document_end_event_initialize(event *yaml_event_t, implicit bool) bool {
+func yaml_document_end_event_initialize(event *yaml_event_t, implicit bool) {
 	*event = yaml_event_t{
 		event_type: yaml_DOCUMENT_END_EVENT,
 		implicit:   implicit,
 	}
-
-	return true
 }
 
 /*
  * Create ALIAS.
  */
 
-func yaml_alias_event_initialize(event *yaml_event_t, anchor []byte) bool {
+func yaml_alias_event_initialize(event *yaml_event_t, anchor []byte) {
 	*event = yaml_event_t{
 		event_type: yaml_ALIAS_EVENT,
 		anchor:     anchor,
 	}
-
-	return true
 }
 
 /*
@@ -389,9 +378,9 @@ func yaml_alias_event_initialize(event *yaml_event_t, anchor []byte) bool {
 
 func yaml_scalar_event_initialize(event *yaml_event_t,
 	anchor []byte, tag []byte,
-	value []byte, length int,
+	value []byte,
 	plain_implicit bool, quoted_implicit bool,
-	style yaml_scalar_style_t) bool {
+	style yaml_scalar_style_t) {
 
 	*event = yaml_event_t{
 		event_type:      yaml_SCALAR_EVENT,
@@ -402,8 +391,6 @@ func yaml_scalar_event_initialize(event *yaml_event_t,
 		quoted_implicit: quoted_implicit,
 		style:           yaml_style_t(style),
 	}
-
-	return true
 }
 
 /*
@@ -411,7 +398,7 @@ func yaml_scalar_event_initialize(event *yaml_event_t,
  */
 
 func yaml_sequence_start_event_initialize(event *yaml_event_t,
-	anchor []byte, tag []byte, implicit bool, style yaml_sequence_style_t) bool {
+	anchor []byte, tag []byte, implicit bool, style yaml_sequence_style_t) {
 	*event = yaml_event_t{
 		event_type: yaml_SEQUENCE_START_EVENT,
 		anchor:     anchor,
@@ -419,20 +406,16 @@ func yaml_sequence_start_event_initialize(event *yaml_event_t,
 		implicit:   implicit,
 		style:      yaml_style_t(style),
 	}
-
-	return true
-
 }
 
 /*
  * Create SEQUENCE-END.
  */
 
-func yaml_sequence_end_event_initialize(event *yaml_event_t) bool {
+func yaml_sequence_end_event_initialize(event *yaml_event_t) {
 	*event = yaml_event_t{
 		event_type: yaml_SEQUENCE_END_EVENT,
 	}
-	return true
 }
 
 /*
@@ -440,7 +423,7 @@ func yaml_sequence_end_event_initialize(event *yaml_event_t) bool {
  */
 
 func yaml_mapping_start_event_initialize(event *yaml_event_t,
-	anchor []byte, tag []byte, implicit bool, style yaml_mapping_style_t) bool {
+	anchor []byte, tag []byte, implicit bool, style yaml_mapping_style_t) {
 	*event = yaml_event_t{
 		event_type: yaml_MAPPING_START_EVENT,
 		anchor:     anchor,
@@ -448,20 +431,16 @@ func yaml_mapping_start_event_initialize(event *yaml_event_t,
 		implicit:   implicit,
 		style:      yaml_style_t(style),
 	}
-
-	return true
 }
 
 /*
  * Create MAPPING-END.
  */
 
-func yaml_mapping_end_event_initialize(event *yaml_event_t) bool {
+func yaml_mapping_end_event_initialize(event *yaml_event_t) {
 	*event = yaml_event_t{
 		event_type: yaml_MAPPING_END_EVENT,
 	}
-	return true
-
 }
 
 /*

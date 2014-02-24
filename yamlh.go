@@ -786,7 +786,7 @@ type yaml_emitter_t struct {
 
 	/** Standard (string or file) output data. */
 	output_buffer *[]byte
-	output_file   io.Writer
+	output_writer io.Writer
 
 	/** The working buffer. */
 	buffer     []byte

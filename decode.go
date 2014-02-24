@@ -7,15 +7,15 @@ import (
 	"io"
 	"reflect"
 	"runtime"
-	"sort"
+	"runtime/debug"
 	"strings"
-	"sync"
-	"unicode"
 )
 
 type Decoder struct {
 	parser yaml_parser_t
 	event  yaml_event_t
+
+	anchors map[string]reflect.Value
 }
 
 type ParserError struct {
@@ -46,7 +46,9 @@ func Unmarshal(data []byte, v interface{}) error {
 }
 
 func NewDecoder(r io.Reader) *Decoder {
-	d := &Decoder{}
+	d := &Decoder{
+		anchors: make(map[string]reflect.Value),
+	}
 	yaml_parser_initialize(&d.parser)
 	yaml_parser_set_input_reader(&d.parser, r)
 	return d
@@ -58,7 +60,16 @@ func (d *Decoder) Decode(v interface{}) (err error) {
 			if _, ok := r.(runtime.Error); ok {
 				panic(r)
 			}
-			err = r.(error)
+			switch r := r.(type) {
+			case error:
+				err = r
+			case string:
+				err = errors.New(r)
+			default:
+				err = errors.New("Unknown panic: " + reflect.TypeOf(r).String())
+			}
+
+			debug.PrintStack()
 		}
 	}()
 
@@ -124,12 +135,21 @@ func (d *Decoder) document(rv reflect.Value) {
 }
 
 func (d *Decoder) parse(rv reflect.Value) {
+	if !rv.IsValid() {
+		// skip ahead since we cannot store
+		d.valueInterface()
+		return
+	}
+
 	switch d.event.event_type {
 	case yaml_SEQUENCE_START_EVENT:
+		d.anchor(rv)
 		d.sequence(rv)
 	case yaml_MAPPING_START_EVENT:
+		d.anchor(rv)
 		d.mapping(rv)
 	case yaml_SCALAR_EVENT:
+		d.anchor(rv)
 		d.scalar(rv)
 	case yaml_ALIAS_EVENT:
 		d.alias(rv)
@@ -140,6 +160,12 @@ func (d *Decoder) parse(rv reflect.Value) {
 			EventType: d.event.event_type,
 			At:        d.event.start_mark,
 		})
+	}
+}
+
+func (d *Decoder) anchor(rv reflect.Value) {
+	if d.event.anchor != nil {
+		d.anchors[string(d.event.anchor)] = rv
 	}
 }
 
@@ -194,7 +220,7 @@ func (d *Decoder) sequence(v reflect.Value) {
 		// Otherwise it's invalid.
 		fallthrough
 	default:
-		d.error(errors.New("array: invalid type: " + v.Type().String()))
+		d.error(errors.New("sequence: invalid type: " + v.Type().String()))
 	case reflect.Array:
 	case reflect.Slice:
 		break
@@ -281,20 +307,25 @@ func (d *Decoder) mapping(v reflect.Value) {
 	d.nextEvent()
 
 	keyt := mapt.Key()
-	valuet := mapt.Elem()
+	mapElemt := mapt.Elem()
 
+	var mapElem reflect.Value
 	for {
 		if d.event.event_type == yaml_MAPPING_END_EVENT {
 			break
 		}
-
 		key := reflect.New(keyt)
 		d.parse(key.Elem())
 
-		value := reflect.New(valuet)
-		d.parse(value.Elem())
+		if !mapElem.IsValid() {
+			mapElem = reflect.New(mapElemt).Elem()
+		} else {
+			mapElem.Set(reflect.Zero(mapElemt))
+		}
 
-		v.SetMapIndex(key.Elem(), value.Elem())
+		d.parse(mapElem)
+
+		v.SetMapIndex(key.Elem(), mapElem)
 	}
 
 	d.nextEvent()
@@ -303,7 +334,6 @@ func (d *Decoder) mapping(v reflect.Value) {
 func (d *Decoder) mappingStruct(v reflect.Value) {
 
 	structt := v.Type()
-	var f *field
 	fields := cachedTypeFields(structt)
 
 	d.nextEvent()
@@ -318,12 +348,14 @@ func (d *Decoder) mappingStruct(v reflect.Value) {
 		// Figure out field corresponding to key.
 		var subv reflect.Value
 
+		var f *field
 		for i := range fields {
 			ff := &fields[i]
 			if ff.name == key {
 				f = ff
 				break
 			}
+
 			if f == nil && strings.EqualFold(ff.name, key) {
 				f = ff
 			}
@@ -360,7 +392,11 @@ func (d *Decoder) scalar(v reflect.Value) {
 	d.nextEvent()
 }
 
-func (d *Decoder) alias(v interface{}) {
+func (d *Decoder) alias(rv reflect.Value) {
+	if val, ok := d.anchors[string(d.event.anchor)]; ok {
+		rv.Set(val)
+	}
+
 	d.nextEvent()
 }
 
@@ -429,292 +465,4 @@ func (d *Decoder) scalarInterface() interface{} {
 
 	d.nextEvent()
 	return v
-}
-
-// A field represents a single field found in a struct.
-type field struct {
-	name      string
-	tag       bool
-	index     []int
-	typ       reflect.Type
-	omitEmpty bool
-	quoted    bool
-}
-
-// byName sorts field by name, breaking ties with depth,
-// then breaking ties with "name came from json tag", then
-// breaking ties with index sequence.
-type byName []field
-
-func (x byName) Len() int { return len(x) }
-
-func (x byName) Swap(i, j int) { x[i], x[j] = x[j], x[i] }
-
-func (x byName) Less(i, j int) bool {
-	if x[i].name != x[j].name {
-		return x[i].name < x[j].name
-	}
-	if len(x[i].index) != len(x[j].index) {
-		return len(x[i].index) < len(x[j].index)
-	}
-	if x[i].tag != x[j].tag {
-		return x[i].tag
-	}
-	return byIndex(x).Less(i, j)
-}
-
-// byIndex sorts field by index sequence.
-type byIndex []field
-
-func (x byIndex) Len() int { return len(x) }
-
-func (x byIndex) Swap(i, j int) { x[i], x[j] = x[j], x[i] }
-
-func (x byIndex) Less(i, j int) bool {
-	for k, xik := range x[i].index {
-		if k >= len(x[j].index) {
-			return false
-		}
-		if xik != x[j].index[k] {
-			return xik < x[j].index[k]
-		}
-	}
-	return len(x[i].index) < len(x[j].index)
-}
-
-// typeFields returns a list of fields that JSON should recognize for the given type.
-// The algorithm is breadth-first search over the set of structs to include - the top struct
-// and then any reachable anonymous structs.
-func typeFields(t reflect.Type) []field {
-	// Anonymous fields to explore at the current level and the next.
-	current := []field{}
-	next := []field{{typ: t}}
-
-	// Count of queued names for current level and the next.
-	count := map[reflect.Type]int{}
-	nextCount := map[reflect.Type]int{}
-
-	// Types already visited at an earlier level.
-	visited := map[reflect.Type]bool{}
-
-	// Fields found.
-	var fields []field
-
-	for len(next) > 0 {
-		current, next = next, current[:0]
-		count, nextCount = nextCount, map[reflect.Type]int{}
-
-		for _, f := range current {
-			if visited[f.typ] {
-				continue
-			}
-			visited[f.typ] = true
-
-			// Scan f.typ for fields to include.
-			for i := 0; i < f.typ.NumField(); i++ {
-				sf := f.typ.Field(i)
-				if sf.PkgPath != "" { // unexported
-					continue
-				}
-				tag := sf.Tag.Get("yaml")
-				if tag == "-" {
-					continue
-				}
-				name, opts := parseTag(tag)
-				if !isValidTag(name) {
-					name = ""
-				}
-				index := make([]int, len(f.index)+1)
-				copy(index, f.index)
-				index[len(f.index)] = i
-
-				ft := sf.Type
-				if ft.Name() == "" && ft.Kind() == reflect.Ptr {
-					// Follow pointer.
-					ft = ft.Elem()
-				}
-
-				// Record found field and index sequence.
-				if name != "" || !sf.Anonymous || ft.Kind() != reflect.Struct {
-					tagged := name != ""
-					if name == "" {
-						name = sf.Name
-					}
-					fields = append(fields, field{name, tagged, index, ft,
-						opts.Contains("omitempty"), opts.Contains("string")})
-					if count[f.typ] > 1 {
-						// If there were multiple instances, add a second,
-						// so that the annihilation code will see a duplicate.
-						// It only cares about the distinction between 1 or 2,
-						// so don't bother generating any more copies.
-						fields = append(fields, fields[len(fields)-1])
-					}
-					continue
-				}
-
-				// Record new anonymous struct to explore in next round.
-				nextCount[ft]++
-				if nextCount[ft] == 1 {
-					next = append(next, field{name: ft.Name(), index: index, typ: ft})
-				}
-			}
-		}
-	}
-
-	sort.Sort(byName(fields))
-
-	// Delete all fields that are hidden by the Go rules for embedded fields,
-	// except that fields with JSON tags are promoted.
-
-	// The fields are sorted in primary order of name, secondary order
-	// of field index length. Loop over names; for each name, delete
-	// hidden fields by choosing the one dominant field that survives.
-	out := fields[:0]
-	for advance, i := 0, 0; i < len(fields); i += advance {
-		// One iteration per name.
-		// Find the sequence of fields with the name of this first field.
-		fi := fields[i]
-		name := fi.name
-		for advance = 1; i+advance < len(fields); advance++ {
-			fj := fields[i+advance]
-			if fj.name != name {
-				break
-			}
-		}
-		if advance == 1 { // Only one field with this name
-			out = append(out, fi)
-			continue
-		}
-		dominant, ok := dominantField(fields[i : i+advance])
-		if ok {
-			out = append(out, dominant)
-		}
-	}
-
-	fields = out
-	sort.Sort(byIndex(fields))
-
-	return fields
-}
-
-// dominantField looks through the fields, all of which are known to
-// have the same name, to find the single field that dominates the
-// others using Go's embedding rules, modified by the presence of
-// JSON tags. If there are multiple top-level fields, the boolean
-// will be false: This condition is an error in Go and we skip all
-// the fields.
-func dominantField(fields []field) (field, bool) {
-	// The fields are sorted in increasing index-length order. The winner
-	// must therefore be one with the shortest index length. Drop all
-	// longer entries, which is easy: just truncate the slice.
-	length := len(fields[0].index)
-	tagged := -1 // Index of first tagged field.
-	for i, f := range fields {
-		if len(f.index) > length {
-			fields = fields[:i]
-			break
-		}
-		if f.tag {
-			if tagged >= 0 {
-				// Multiple tagged fields at the same level: conflict.
-				// Return no field.
-				return field{}, false
-			}
-			tagged = i
-		}
-	}
-	if tagged >= 0 {
-		return fields[tagged], true
-	}
-	// All remaining fields have the same length. If there's more than one,
-	// we have a conflict (two fields named "X" at the same level) and we
-	// return no field.
-	if len(fields) > 1 {
-		return field{}, false
-	}
-	return fields[0], true
-}
-
-var fieldCache struct {
-	sync.RWMutex
-	m map[reflect.Type][]field
-}
-
-// cachedTypeFields is like typeFields but uses a cache to avoid repeated work.
-func cachedTypeFields(t reflect.Type) []field {
-	fieldCache.RLock()
-	f := fieldCache.m[t]
-	fieldCache.RUnlock()
-	if f != nil {
-		return f
-	}
-
-	// Compute fields without lock.
-	// Might duplicate effort but won't hold other computations back.
-	f = typeFields(t)
-	if f == nil {
-		f = []field{}
-	}
-
-	fieldCache.Lock()
-	if fieldCache.m == nil {
-		fieldCache.m = map[reflect.Type][]field{}
-	}
-	fieldCache.m[t] = f
-	fieldCache.Unlock()
-	return f
-}
-
-// tagOptions is the string following a comma in a struct field's "json"
-// tag, or the empty string. It does not include the leading comma.
-type tagOptions string
-
-func isValidTag(s string) bool {
-	if s == "" {
-		return false
-	}
-	for _, c := range s {
-		switch {
-		case strings.ContainsRune("!#$%&()*+-./:<=>?@[]^_{|}~ ", c):
-			// Backslash and quote chars are reserved, but
-			// otherwise any punctuation chars are allowed
-			// in a tag name.
-		default:
-			if !unicode.IsLetter(c) && !unicode.IsDigit(c) {
-				return false
-			}
-		}
-	}
-	return true
-}
-
-// parseTag splits a struct field's json tag into its name and
-// comma-separated options.
-func parseTag(tag string) (string, tagOptions) {
-	if idx := strings.Index(tag, ","); idx != -1 {
-		return tag[:idx], tagOptions(tag[idx+1:])
-	}
-	return tag, tagOptions("")
-}
-
-// Contains reports whether a comma-separated list of options
-// contains a particular substr flag. substr must be surrounded by a
-// string boundary or commas.
-func (o tagOptions) Contains(optionName string) bool {
-	if len(o) == 0 {
-		return false
-	}
-	s := string(o)
-	for s != "" {
-		var next string
-		i := strings.Index(s, ",")
-		if i >= 0 {
-			s, next = s[:i], s[i+1:]
-		}
-		if s == optionName {
-			return true
-		}
-		s = next
-	}
-	return false
 }

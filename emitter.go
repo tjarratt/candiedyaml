@@ -1206,7 +1206,6 @@ func yaml_emitter_analyze_tag(emitter *yaml_emitter_t, tag []byte) bool {
 
 	for i := range emitter.tag_directives {
 		tag_directive := &emitter.tag_directives[i]
-
 		if bytes.HasPrefix(tag, tag_directive.prefix) {
 			emitter.tag_data.handle = tag_directive.handle
 			emitter.tag_data.suffix = tag[len(tag_directive.prefix):]
@@ -1561,7 +1560,7 @@ func yaml_emitter_write_tag_content(emitter *yaml_emitter_t, value []byte,
 		write_it := false
 		switch value[i] {
 		case ';', '/', '?', ':', '@', '&', '=', '+', '$', ',', '_',
-			'.', '~', '*', '\'', '(', ')', '[', ']':
+			'.', '!', '~', '*', '\'', '(', ')', '[', ']':
 			write_it = true
 		default:
 			write_it = is_alpha(value[i])

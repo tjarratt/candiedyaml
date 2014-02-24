@@ -2,6 +2,7 @@ package candiedyaml
 
 import (
 	"bytes"
+	"encoding/base64"
 	"errors"
 	"math"
 	"reflect"
@@ -10,6 +11,8 @@ import (
 	"strings"
 	"time"
 )
+
+var byteSliceType = reflect.TypeOf([]byte(nil))
 
 var bool_values map[string]bool
 var null_values map[string]bool
@@ -45,10 +48,6 @@ func init() {
 
 func resolve(event yaml_event_t, v reflect.Value) error {
 	val := string(event.value)
-	if len(event.tag) == 0 && !event.implicit {
-		v.SetString(val)
-		return nil
-	}
 
 	if null_values[val] {
 		v.Set(reflect.Zero(v.Type()))
@@ -67,12 +66,20 @@ func resolve(event yaml_event_t, v reflect.Value) error {
 	case reflect.Float32, reflect.Float64:
 		return resolve_float(val, v)
 	case reflect.Interface:
-		panic("determine best type?")
-		//		out.Set(reflect.ValueOf(resolved))
+		v.Set(reflect.ValueOf(resolveInterface(event)))
 	case reflect.Struct:
 		return resolve_time(val, v)
-	case reflect.Slice, reflect.Array:
-		panic("handle binary")
+	case reflect.Slice:
+		if v.Type() != byteSliceType {
+			return errors.New("Cannot resolve into " + v.Type().String())
+		}
+		b := make([]byte, base64.StdEncoding.DecodedLen(len(event.value)))
+		n, err := base64.StdEncoding.Decode(b, event.value)
+		if err != nil {
+			return err
+		}
+
+		v.Set(reflect.ValueOf(b[0:n]))
 	default:
 		return errors.New("Resolve failed for " + v.Kind().String())
 	}

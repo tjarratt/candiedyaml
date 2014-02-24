@@ -62,7 +62,6 @@ func copy_bytes(dest []byte, dest_pos *int, src []byte, src_pos *int) {
 		fallthrough
 	case 1:
 		dest[*dest_pos] = src[*src_pos]
-		fallthrough
 	default:
 		panic("invalid width")
 	}

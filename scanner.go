@@ -2686,6 +2686,7 @@ func yaml_parser_scan_block_scalar(parser *yaml_parser_t, token *yaml_token_t,
 			if len(trailing_breaks) == 0 {
 				s = append(s, ' ')
 			}
+			leading_break = leading_break[:0]
 		} else {
 			s = append(s, leading_break...)
 			leading_break = leading_break[:0]
@@ -2776,10 +2777,6 @@ func yaml_parser_scan_block_scalar_breaks(parser *yaml_parser_t,
 				return false
 			}
 		}
-		if parser.mark.column > max_indent {
-			max_indent = parser.mark.column
-		}
-
 		if parser.mark.column > max_indent {
 			max_indent = parser.mark.column
 		}
