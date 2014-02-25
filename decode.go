@@ -7,7 +7,6 @@ import (
 	"io"
 	"reflect"
 	"runtime"
-	"runtime/debug"
 	"strings"
 )
 
@@ -68,8 +67,6 @@ func (d *Decoder) Decode(v interface{}) (err error) {
 			default:
 				err = errors.New("Unknown panic: " + reflect.TypeOf(r).String())
 			}
-
-			debug.PrintStack()
 		}
 	}()
 
